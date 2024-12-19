@@ -1,4 +1,3 @@
-
 'use strict';
 
 const { Model, Validator } = require('sequelize');
@@ -10,16 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
+
   User.init(
     {
-      firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       username: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -53,11 +45,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'User',
-      defaultScope: {
-        attributes: {
-          exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt'],
-        },
-      },
     }
   );
   return User;
