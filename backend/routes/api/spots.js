@@ -1,33 +1,37 @@
+
 const express = require('express');
 
-const { Spot } = require('../../db/models'); 
+const { Spot } = require('../../db/models/'); 
 const router = express.Router();
 
 
 //! GET ALL spots
 router.get('/', async (req, res, next) => {
-    const spots = await Spot.findAll();
+    try {
+        const spots = await Spot.findAll();
 
-    const spotsInfo = spots.map(spot => ({
-        id: spots.id,
-        ownerId: spot.ownerId,
-        address: spot.address,
-        city: spot.city,
-        state: spot.state,
-        country: spot.country,
-        lat: spot.lat,
-        lng: spot.lng,
-        name: spot.name,
-        description: spot.description,
-        price: spot.price,
-        createdAt: spot.createdAt,
-        updatedAT: spot.updatedAT,
-        avgRating: null,
-        previewImage: null,
-    }));
+        const spotsInfo = spots.map(spot => ({
+            id: spot.id,
+            ownerId: spot.ownerId,
+            address: spot.address,
+            city: spot.city,
+            state: spot.state,
+            country: spot.country,
+            lat: spot.lat,
+            lng: spot.lng,
+            name: spot.name,
+            description: spot.description,
+            price: spot.price,
+            createdAt: spot.createdAt,
+            updatedAt: spot.updatedAt, 
+            avgRating: null, 
+            previewImage: null, 
+        }));
 
-return res.status(200).json({ Spots: spotsInfo })
-
+        return res.status(200).json({ Spots: spotsInfo });
+    } catch (error) {
+        next(error);
+    }
 });
 
 
@@ -112,7 +116,7 @@ router.get('/:spotId', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     try {
         const { address, city, state, country, lat, lng, name, description, price } = req.body;
-        const ownerId = req.user.id; // Assuming user ID is available from auth middleware
+        const ownerId = req.user.id; 
 
         const newSpot = await Spot.create({
             ownerId,
