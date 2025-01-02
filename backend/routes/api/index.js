@@ -23,7 +23,7 @@ router.use('/users', usersRouter); // Use users routers
 router.use('/spots', spotRouter); // Use spots routers
 router.use('/bookings', bookingRouter); // Use bookings router
 router.use('/images', imageRouter); // Use images router
-//router.use('/reviews', reviewRouter); // Use reviews router
+router.use('/reviews', reviewRouter); // Use reviews router
 
 
 router.post('/test', (req, res) => {

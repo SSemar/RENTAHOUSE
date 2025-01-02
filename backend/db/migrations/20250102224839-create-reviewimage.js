@@ -1,4 +1,3 @@
-// filepath: /home/ssemar/appAcademy/w13-project/backend/db/migrations/20250102155047-create-review.js
 'use strict';
 
 let options = {};
@@ -8,37 +7,24 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Reviews', {
+    await queryInterface.createTable('ReviewImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {
+      reviewId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users',
+          model: 'Reviews',
           key: 'id'
         },
         onDelete: 'CASCADE'
       },
-      spotId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Spots',
-          key: 'id'
-        },
-        onDelete: 'CASCADE'
-      },
-      review: {
-        type: Sequelize.TEXT,
-        allowNull: false
-      },
-      stars: {
-        type: Sequelize.INTEGER,
+      url: {
+        type: Sequelize.STRING,
         allowNull: false
       },
       createdAt: {
@@ -55,7 +41,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = "Reviews";
+    options.tableName = "ReviewImages";
     await queryInterface.dropTable(options);
   }
 };
