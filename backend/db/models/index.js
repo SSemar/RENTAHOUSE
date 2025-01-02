@@ -3,7 +3,6 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../../config/database.js')[env];
@@ -25,12 +24,11 @@ fs
       file.slice(-3) === '.js' &&
       file.indexOf('.test.js') === -1
     );
-  
   })
-  //.forEach(file => {
-//    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
- //   db[model.name] = model;
- // });
+  // .forEach(file => {
+  //   const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+  //   db[model.name] = model;
+  // });
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {

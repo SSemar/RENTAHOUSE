@@ -2,7 +2,7 @@
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
+  options.schema = process.env.SCHEMA;  
 }
 
 module.exports = {
@@ -18,10 +18,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users', // Assumes a table named 'Users' exists
+          model: 'Users', 
           key: 'id',
         },
-        onDelete: 'CASCADE', // Deletes spots if the owner is deleted
+        onDelete: 'CASCADE', 
       },
       address: {
         type: Sequelize.STRING,

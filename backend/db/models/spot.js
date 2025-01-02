@@ -1,18 +1,14 @@
 'use strict';
 
-const { Model, Validator } = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
     static associate(models) {
-      
+      // Define associations here
      // Spot.belongsTo(models.User, { foreignKey: 'ownerId' });
-
-      
-     // Spot.hasMany(models.SpotImage, { foreignKey: 'spotId', as: 'images' });
-
-      
-     // Spot.hasMany(models.Review, { foreignKey: 'spotId', as: 'reviews' });
+      //Spot.hasMany(models.SpotImage, { foreignKey: 'spotId', as: 'images' });
+      //Spot.hasMany(models.Review, { foreignKey: 'spotId', as: 'reviews' });
     }
   }
 
@@ -57,20 +53,14 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          len: [1, 50], 
-        },
       },
       description: {
         type: DataTypes.TEXT,
+        allowNull: false,
       },
       price: {
         type: DataTypes.FLOAT,
         allowNull: false,
-        validate: {
-          isFloat: true,
-          min: 0, 
-        },
       },
     },
     {
@@ -81,3 +71,4 @@ module.exports = (sequelize, DataTypes) => {
 
   return Spot;
 };
+

@@ -6,13 +6,25 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       // define association here
+      User.hasMany(models.Review, { foreignKey: 'userId' });
     }
   }
 
   User.init(
     {
-      firstName:{
-
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [1, 50],
+        },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [1, 50],
+        },
       },
       username: {
         type: DataTypes.STRING,
@@ -48,11 +60,15 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'User',
       defaultScope: {
-        attributes: {
-          exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt'],
+        attributes: { exclude: ['hashedPassword'] },
+      },
+      scopes: {
+        unscoped: {
+          attributes: {},
         },
       },
     }
   );
+
   return User;
 };
