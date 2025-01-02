@@ -1,4 +1,6 @@
 //keep
+const { Model, Validator } = require('sequelize');
+
 
 module.exports = (sequelize, DataTypes) => {
   class Review extends Model {
