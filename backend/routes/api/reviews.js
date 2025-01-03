@@ -27,18 +27,52 @@ const validateReview = [
   }
 ];
 
-//! Get all Reviews by a Spot's id
-router.get('/spots/:spotId/reviews', async (req, res, next) => {
-  const { spotId } = req.params;
-  //console.log("spottype----------", typeof spotId);
+
+//seed new data?
+//redo route use current user which works as reference.
+//CHECK THE ROUTE ORDER? Seems corrected not hitting the spotId route
+//DROP THE DB AND TEST
+
+//! Get all Reviews of the Current User
+router.get('/current', requireAuth, async (req, res, next) => {
+  const userId = req.user.id;
+  console.log('Fetching reviews for user:', userId);
+
   try {
-    const spot = await Spot.findByPk(spotId);
-    //if not spot
+    const reviews = await Review.findAll({
+      where: { userId },
+      include: [
+        { model: User, attributes: ['id', 'firstName', 'lastName'] },
+        { model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'] },
+        { model: ReviewImage, as: 'ReviewImages', attributes: ['id', 'url'] }
+      ]
+    });
+
+    if (!reviews || reviews.length === 0) {
+      console.log('No reviews found for user:', userId);
+    }
+
+    return res.status(200).json({ Reviews: reviews });
+  } catch (err) {
+    console.error('Error fetching reviews:', err.message, err.stack);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+//! GET ALL REVIEWS OF SPOTID
+router.get('/spots/:spotId/reviews', async (req, res, next) => {
+  console.log('Request received for /spots/:spotId/reviews'); //! ROUTE NOT GETTING HIT
+  const { spotId } = req.params;
+  console.log('Spot ID:', spotId); //! NOTHING RETURNED
+  try {
+    const spot = await Spot.findByPk(Number(spotId));
+    console.log(spot);
     if (!spot) {
       const err = new Error("Spot couldn't be found");
       err.status = 404;
       return next(err);
     }
+    
     const reviews = await Review.findAll({
       where: { spotId },
       include: [
@@ -47,30 +81,11 @@ router.get('/spots/:spotId/reviews', async (req, res, next) => {
       ]
     });
     return res.status(200).json({ Reviews: reviews });
-    
   } catch (err) {
-    next(err)
+    next(err);
   }
 });
 
-//! Get all Reviews of the Current User
-router.get('/current', requireAuth, async (req, res, next) => {
-  const userId = req.user.id;
-  try {
-    const reviews = await Review.findAll({
-      where: { userId },
-      include: [
-        { model: User, attributes: ['id', 'firstName', 'lastName'] },
-        { model: Spot },
-        { model: ReviewImage, as: 'ReviewImages' }
-      ]
-    });
-    return res.status(200).json({ Reviews: reviews });
-  } catch (err) {
-    console.error('Error fetching reviews:', err); 
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-});
 
 //! POST create a new review for a spot
 router.post('/spots/:spotId/reviews', requireAuth, validateReview, async (req, res, next) => {

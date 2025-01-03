@@ -1,17 +1,16 @@
-'use strict';
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class ReviewImage extends Model {
+  class SpotImage extends Model {
     static associate(models) {
       // define association here
-      ReviewImage.belongsTo(models.Review, { foreignKey: 'reviewId' });
+      SpotImage.belongsTo(models.Spot, { foreignKey: 'spotId' });
     }
   }
 
-  ReviewImage.init(
+  SpotImage.init(
     {
-      reviewId: {
+      spotId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -19,11 +18,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      preview: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       sequelize,
-      modelName: 'ReviewImage',
+      modelName: 'SpotImage',
     }
   );
-  return ReviewImage;
+  return SpotImage;
 };

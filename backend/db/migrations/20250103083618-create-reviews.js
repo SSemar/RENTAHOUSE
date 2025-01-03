@@ -12,49 +12,55 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       spotId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Spots',
-          key: 'id'
+          model: {
+            tableName: 'Spots',
+            schema: options.schema, // Add schema for references in production
+          },
+          key: 'id',
         },
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users',
-          key: 'id'
+          model: {
+            tableName: 'Users',
+            schema: options.schema, 
+          },
+          key: 'id',
         },
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       },
       review: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: false,
       },
       stars: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      }
-    }, options);
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    }, options); 
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = "Reviews";
+    options.tableName = 'Reviews';
     await queryInterface.dropTable(options);
   }
 };

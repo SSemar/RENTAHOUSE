@@ -1,33 +1,33 @@
 'use strict';
 
-const { ReviewImage } = require('../models');
-
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
+  options.schema = process.env.SCHEMA;  // Define schema if needed
 }
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.tableName = 'ReviewImages';
+    options.tableName = 'SpotImages';
     await queryInterface.bulkInsert(options, [
       {
-        reviewId: 1,
+        spotId: 1, 
         url: 'https://example.com/image1.jpg',
+        preview: true,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       {
-        reviewId: 2,
+        spotId: 1,
         url: 'https://example.com/image2.jpg',
+        preview: false,
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     ], {});
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = 'ReviewImages';
+    options.tableName = 'SpotImages';
     await queryInterface.bulkDelete(options, null, {});
   }
 };
