@@ -7,71 +7,30 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Spots', {
+    await queryInterface.createTable('SpotImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      ownerId: {
+      spotId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users',
+          model: 'Spots',
           key: 'id'
         },
         onDelete: 'CASCADE'
       },
-      address: {
+      url: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      state: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      country: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      lat: {
-        type: Sequelize.FLOAT,
-        allowNull: true,
-        validate: {
-          min: -90,
-          max: 90,
-        },
-      },
-      lng: {
-        type: Sequelize.FLOAT,
-        allowNull: true,
-        validate: {
-          min: -180,
-          max: 180,
-        },
-      },
-      name: {
-        type: Sequelize.STRING,
+      preview: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
-        validate: {
-          len: [1, 50],
-        },
-      },
-      description: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
-      price: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        validate: {
-          min: 0,
-        },
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,
@@ -87,7 +46,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = "Spots";
+    options.tableName = "SpotImages";
     await queryInterface.dropTable(options);
   }
 };

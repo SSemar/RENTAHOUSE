@@ -30,7 +30,7 @@ const validateReview = [
 //! Get all Reviews by a Spot's id
 router.get('/spots/:spotId/reviews', async (req, res, next) => {
   const { spotId } = req.params;
-  console.log("spottype----------", typeof spotId);
+  //console.log("spottype----------", typeof spotId);
   try {
     const spot = await Spot.findByPk(spotId);
     //if not spot
