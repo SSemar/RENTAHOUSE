@@ -1,4 +1,3 @@
-// filepath: /home/ssemar/appAcademy/w13-project/backend/db/migrations/20250102155047-create-review.js
 'use strict';
 
 let options = {};

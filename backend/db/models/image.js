@@ -1,29 +1,33 @@
-'use strict';
-
-const { Model, Validator } = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  const Image = sequelize.define('Image', {
-    spotId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Spots',
-        key: 'id'
-      },
-      onDelete: 'CASCADE'
-    },
-    url: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    preview: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false
+  class Image extends Model {
+    static associate(models) {
+      // define association here
+      Image.belongsTo(models.Spot, { foreignKey: 'spotId' });
     }
-  }, {});
-  Image.associate = function(models) {
-    Image.belongsTo(models.Spot, { foreignKey: 'spotId' });
-  };
+  }
+
+  Image.init(
+    {
+      spotId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      preview: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+    },
+    {
+      sequelize,
+      modelName: 'SpotImage',
+    }
+  );
   return Image;
 };

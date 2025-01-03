@@ -1,14 +1,8 @@
-
-
-
 const express = require('express');
 const router = express.Router();
 const { Review, Spot, User, ReviewImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { check, validationResult } = require('express-validator');
-
-
-
 
 // Validation middleware for creating and updating a review
 const validateReview = [
@@ -36,8 +30,10 @@ const validateReview = [
 //! Get all Reviews by a Spot's id
 router.get('/spots/:spotId/reviews', async (req, res, next) => {
   const { spotId } = req.params;
+  console.log("spottype----------", typeof spotId);
   try {
     const spot = await Spot.findByPk(spotId);
+    //if not spot
     if (!spot) {
       const err = new Error("Spot couldn't be found");
       err.status = 404;
@@ -51,8 +47,9 @@ router.get('/spots/:spotId/reviews', async (req, res, next) => {
       ]
     });
     return res.status(200).json({ Reviews: reviews });
+    
   } catch (err) {
-    return res.status(500).json({ message: 'Internal server error' });
+    next(err)
   }
 });
 

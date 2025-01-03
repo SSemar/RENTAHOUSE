@@ -2,7 +2,7 @@
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  
+  options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
 module.exports = {
@@ -12,32 +12,32 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       ownerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users', 
-          key: 'id',
+          model: 'Users',
+          key: 'id'
         },
-        onDelete: 'CASCADE', 
+        onDelete: 'CASCADE'
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       city: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       state: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       country: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       lat: {
         type: Sequelize.FLOAT,
@@ -76,18 +76,18 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      },
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      }
     }, options);
   },
 
   async down(queryInterface, Sequelize) {
     options.tableName = "Spots";
-    return queryInterface.dropTable(options);
-  },
+    await queryInterface.dropTable(options);
+  }
 };
