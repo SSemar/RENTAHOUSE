@@ -1,6 +1,10 @@
-//keep
-const { Model, Validator } = require('sequelize');
 
+
+
+'use strict';
+
+
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Review extends Model {
@@ -22,12 +26,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      rating: {
-        type: DataTypes.INTEGER,
+      review: {
+        type: DataTypes.TEXT,
         allowNull: false,
       },
-      content: {
-        type: DataTypes.TEXT,
+      stars: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
@@ -37,4 +41,4 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   return Review;
-}
+};
