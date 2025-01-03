@@ -1,40 +1,37 @@
 'use strict';
 
+const { Spot } = require('../models');
+const bcrypt = require("bcryptjs");
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Spots', [
+    options.tableName = 'Spots';
+    await queryInterface.bulkInsert(options, [
       {
+        id: 1,
         ownerId: 1,
         address: '123 Disney Lane',
         city: 'San Francisco',
         state: 'California',
-        country: 'United States',
-        lat: 37.7749,
-        lng: -122.4194,
-        name: 'Beautiful Spot in SF',
-        description: 'A cozy and wonderful place to stay.',
-        price: 200.0,
+        country: 'United States of America',
+        lat: 37.7645358,
+        lng: -122.4730327,
+        name: 'App Academy',
+        description: 'Place where web developers are created',
+        price: 123,
         createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ownerId: 2,
-        address: '456 Ocean Drive',
-        city: 'Los Angeles',
-        state: 'California',
-        country: 'United States',
-        lat: 34.0522,
-        lng: -118.2437,
-        name: 'Sunny Beach House',
-        description: 'Perfect for a summer getaway.',
-        price: 350.0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+        updatedAt: new Date()
+      }
     ], {});
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Spots', null, {});
+    options.tableName = 'Spots';
+    await queryInterface.bulkDelete(options, null, {});
   }
 };
