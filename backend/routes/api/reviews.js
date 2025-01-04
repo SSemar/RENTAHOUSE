@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { Review, Spot, User, ReviewImage } = require('../../db/models');
+const { Spot, Review, User, ReviewImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { check, validationResult } = require('express-validator');
+
+
 
 // Validation middleware for creating and updating a review
 const validateReview = [
@@ -26,7 +28,6 @@ const validateReview = [
     next();
   }
 ];
-
 
 //seed new data?
 //redo route use current user which works as reference.
@@ -59,63 +60,71 @@ router.get('/current', requireAuth, async (req, res, next) => {
   }
 });
 
-//! GET ALL REVIEWS OF SPOTID
-router.get('/spots/:spotId/reviews', async (req, res, next) => {
-  console.log('Request received for /spots/:spotId/reviews'); //! ROUTE NOT GETTING HIT
+
+
+//!!_________________________________________________
+router.get('/spot/:spotId/reviews', async (req, res, next) => {
   const { spotId } = req.params;
-  console.log('Spot ID:', spotId); //! NOTHING RETURNED
-  try {
-    const spot = await Spot.findByPk(Number(spotId));
-    console.log(spot);
-    if (!spot) {
-      const err = new Error("Spot couldn't be found");
-      err.status = 404;
-      return next(err);
-    }
-    
-    const reviews = await Review.findAll({
-      where: { spotId },
-      include: [
-        { model: User, attributes: ['id', 'firstName', 'lastName'] },
-        { model: ReviewImage, as: 'ReviewImages' }
-      ]
-    });
-    return res.status(200).json({ Reviews: reviews });
-  } catch (err) {
-    next(err);
+
+  // Check if spot exists
+  const spot = await Spot.findByPk(spotId);
+  if (!spot) {
+    return res.status(404).json({ message: "Spot couldn't be found" });
   }
+
+  // Fetch reviews for the spot
+  const reviews = await Review.findAll({
+    where: { spotId },
+    include: [
+      { model: User, attributes: ['id', 'firstName', 'lastName'] },
+      { model: ReviewImage, as: 'ReviewImages', attributes: ['id', 'url'] },
+    ],
+  });
+
+  res.status(200).json({ Reviews: reviews });
 });
 
 
-//! POST create a new review for a spot
-router.post('/spots/:spotId/reviews', requireAuth, validateReview, async (req, res, next) => {
+//!---------------------------------------------------
+router.post('/spot/:spotId/reviews', requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
   const { review, stars } = req.body;
   const userId = req.user.id;
 
-  try {
-    const spot = await Spot.findByPk(spotId);
-    if (!spot) {
-      return res.status(404).json({ message: "Spot couldn't be found" });
-    }
-
-    const existingReview = await Review.findOne({ where: { userId, spotId } });
-    if (existingReview) {
-      return res.status(500).json({ message: "User already has a review for this spot" });
-    }
-
-    const newReview = await Review.create({
-      userId,
-      spotId,
-      review,
-      stars,
+  // Validate input
+  if (!review || stars === undefined || stars < 1 || stars > 5) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors: {
+        review: !review ? "Review text is required" : undefined,
+        stars: stars === undefined ? "Stars must be an integer from 1 to 5" : undefined,
+      },
     });
-
-    return res.status(201).json(newReview);
-  } catch (err) {
-    next(err);
   }
+
+  // Check if spot exists
+  const spot = await Spot.findByPk(spotId);
+  if (!spot) {
+    return res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  // Check if the user already has a review for the spot
+  const existingReview = await Review.findOne({ where: { spotId, userId } });
+  if (existingReview) {
+    return res.status(500).json({ message: "User already has a review for this spot" });
+  }
+
+  // Create the review
+  const newReview = await Review.create({
+    userId,
+    spotId,
+    review,
+    stars,
+  });
+
+  res.status(201).json(newReview);
 });
+
 
 //! POST add a new image to a review based on review id
 router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
