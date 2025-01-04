@@ -9,9 +9,11 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.tableName = 'Reviews'; 
-    await queryInterface.bulkInsert('Reviews', [
-      {
+    options.tableName = 'Reviews'; // Add table name to options
+    await queryInterface.bulkInsert(
+      options, // Pass the options object
+      [
+        {
         spotId: 1,
         userId: 1,
         review: 'Great place!',
