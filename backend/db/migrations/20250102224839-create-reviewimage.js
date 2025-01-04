@@ -13,7 +13,7 @@ module.exports = {
         spotId: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          references: { model: 'Spots', key: 'id' }, // Assuming this is the relationship
+          references: { model: 'Spots', key: 'id' }, 
         },
         createdAt: {
           type: Sequelize.DATE,
