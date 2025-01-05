@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie } = require('../../utils/auth');
-
+const { Op } = require('sequelize');
 
 const validateSignup = [
   check('email')
@@ -38,7 +38,29 @@ router.post(
   '/',
   validateSignup,
   async (req, res, next) => {
-    const { email, password, username, firstName, lastName } = req.body; // Include firstName and lastName
+    const { email, password, username, firstName, lastName } = req.body;
+
+    // Check if user with the same email or username already exists
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [
+          { email },
+          { username }
+        ]
+      }
+    });
+
+    if (existingUser) {
+      const err = new Error('User already exists');
+      err.status = 500;
+      if (existingUser.email === email) {
+        err.errors = { email: 'User with that email already exists' };
+      } else if (existingUser.username === username) {
+        err.errors = { username: 'User with that username already exists' };
+      }
+      return next(err);
+    }
+
     const hashedPassword = bcrypt.hashSync(password);
     const user = await User.create({ email, username, hashedPassword, firstName, lastName });
 
@@ -53,7 +75,7 @@ router.post(
     await setTokenCookie(res, safeUser);
 
     return res.status(201).json({
-      user: safeUser
+      user: safeUser,
     });
   }
 );
