@@ -53,7 +53,7 @@ const validateSpot = [
 ];
 
 
-//! GET ALL spots
+//! GET all spots
 router.get('/', async (req, res, next) => {
   try {
     const spots = await Spot.findAll({
@@ -87,10 +87,10 @@ router.get('/', async (req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: spot.price,
-        createdAt: spot.createdAt,
-        updatedAt: spot.updatedAt,
-        avgRating: avgRating, // Calculate avgRating
-        previewImage: spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null, // Set previewImage
+        createdAt: spot.createdAt.toISOString().replace('T', ' ').replace('Z', ''),
+        updatedAt: spot.updatedAt.toISOString().replace('T', ' ').replace('Z', ''),
+        avgRating: avgRating,
+        previewImage: spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null,
       };
     });
 
