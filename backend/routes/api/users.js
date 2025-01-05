@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { setTokenCookie } = require('../../utils/auth');
-
+const { Op } = require('sequelize');
 
 //! Validation
 const validateSignup = [
@@ -79,5 +79,4 @@ router.post(
     });
   }
 );
-
 module.exports = router;
