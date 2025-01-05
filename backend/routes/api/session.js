@@ -23,20 +23,20 @@ const validateLogin = [
   handleValidationErrors
 ];
 
-//! Log in
+// Log in
 router.post(
   '/',
   validateLogin,
   async (req, res, next) => {
     const { credential, password } = req.body;
-    const user = await User.findOne({
+
+    const user = await User.unscoped().findOne({
       where: {
         [Op.or]: {
           username: credential,
           email: credential
         }
-      },
-      attributes: ['id', 'firstName', 'lastName', 'email', 'username', 'hashedPassword'] // Include hashedPassword
+      }
     });
 
     if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
@@ -49,10 +49,10 @@ router.post(
 
     const safeUser = {
       id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
       email: user.email,
       username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
     };
 
     await setTokenCookie(res, safeUser);
