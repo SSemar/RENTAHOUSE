@@ -57,9 +57,27 @@ const validateSpot = [
 
 //! GET ALL spots
 router.get('/', async (req, res, next) => {
-    const spots =  await Spot.findAll() 
-    .catch(next);
-    const spotsInfo = spots.map(spot => ({
+  try {
+    const spots = await Spot.findAll({
+      include: [
+        {
+          model: SpotImage,
+          attributes: ['url'],
+          where: { preview: true },
+          required: false
+        },
+        {
+          model: Review,
+          attributes: ['stars']
+        }
+      ]
+    });
+
+    const spotsInfo = spots.map(spot => {
+      const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
+      const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
+
+      return {
         id: spot.id,
         ownerId: spot.ownerId,
         address: spot.address,
@@ -73,11 +91,15 @@ router.get('/', async (req, res, next) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: null,
-        previewImage: null,
-    }));
+        avgRating: avgRating, // Calculate avgRating
+        previewImage: spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null, // Set previewImage
+      };
+    });
 
     return res.status(200).json({ Spots: spotsInfo });
+  } catch (error) {
+    next(error);
+  }
 });
 
 //! GET Spots owned by Current User
