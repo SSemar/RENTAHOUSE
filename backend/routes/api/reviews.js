@@ -37,29 +37,68 @@ const validateReview = [
 //! Get all Reviews of the Current User
 router.get('/current', requireAuth, async (req, res, next) => {
   const userId = req.user.id;
-  console.log('Fetching reviews for user:', userId);
 
   try {
     const reviews = await Review.findAll({
       where: { userId },
       include: [
         { model: User, attributes: ['id', 'firstName', 'lastName'] },
-        { model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'] },
+        {
+          model: Spot,
+          attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
+          include: [
+            {
+              model: SpotImage,
+              attributes: ['url'],
+              where: { preview: true },
+              required: false
+            }
+          ]
+        },
         { model: ReviewImage, as: 'ReviewImages', attributes: ['id', 'url'] }
       ]
     });
 
-    if (!reviews || reviews.length === 0) {
-      console.log('No reviews found for user:', userId);
-    }
+    const reviewsInfo = reviews.map(review => {
+      const spot = review.Spot;
+      const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
 
-    return res.status(200).json({ Reviews: reviews });
+      return {
+        id: review.id,
+        userId: review.userId,
+        spotId: review.spotId,
+        review: review.review,
+        stars: review.stars,
+        createdAt: review.createdAt,
+        updatedAt: review.updatedAt,
+        User: {
+          id: review.User.id,
+          firstName: review.User.firstName,
+          lastName: review.User.lastName
+        },
+        Spot: {
+          id: spot.id,
+          ownerId: spot.ownerId,
+          address: spot.address,
+          city: spot.city,
+          state: spot.state,
+          country: spot.country,
+          lat: spot.lat,
+          lng: spot.lng,
+          name: spot.name,
+          price: spot.price,
+          previewImage: previewImage
+        },
+        ReviewImages: review.ReviewImages
+      };
+    });
+
+    return res.status(200).json({ Reviews: reviewsInfo });
   } catch (err) {
     console.error('Error fetching reviews:', err.message, err.stack);
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
-
 
 
 //!!_________________________________________________
@@ -157,29 +196,54 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
   }
 });
 
-//! PUT edit a review
-router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
+//! Edit a Review
+router.put('/:reviewId', requireAuth, async (req, res, next) => {
   const { reviewId } = req.params;
   const { review, stars } = req.body;
+  const userId = req.user.id;
 
   try {
+    // Validate review input
+    if (!review || stars === undefined || stars < 1 || stars > 5) {
+      return res.status(400).json({
+        message: "Validation error",
+        errors: {
+          review: !review ? "Review text is required" : undefined,
+          stars: stars === undefined ? "Stars must be an integer from 1 to 5" : undefined,
+        },
+      });
+    }
+
+    // Check if the review exists
     const existingReview = await Review.findByPk(reviewId);
     if (!existingReview) {
       return res.status(404).json({ message: "Review couldn't be found" });
     }
 
-    if (existingReview.userId !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized" });
+    // Check if the review belongs to the current user
+    if (existingReview.userId !== userId) {
+      return res.status(403).json({ message: "Forbidden" });
     }
 
-    await existingReview.update({
-      review,
-      stars,
-    });
+    // Update the review
+    existingReview.review = review;
+    existingReview.stars = stars;
+    await existingReview.save();
 
     return res.status(200).json(existingReview);
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    if (error.name === 'SequelizeValidationError') {
+      const errors = error.errors.reduce((acc, err) => {
+        acc[err.path] = err.message;
+        return acc;
+      }, {});
+
+      return res.status(400).json({
+        message: 'Validation error',
+        errors: errors
+      });
+    }
+    next(error);
   }
 });
 
