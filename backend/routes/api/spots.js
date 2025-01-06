@@ -70,7 +70,7 @@ router.get('/', async (req, res, next) => {
         }
       ]
     });
-
+    //calc avg stars var and map array method
     const spotsInfo = spots.map(spot => {
       const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
       const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
@@ -82,11 +82,11 @@ router.get('/', async (req, res, next) => {
         city: spot.city,
         state: spot.state,
         country: spot.country,
-        lat: spot.lat,
-        lng: spot.lng,
+        lat: parseFloat(spot.lat),
+        lng: parseFloat(spot.lng),
         name: spot.name,
         description: spot.description,
-        price: spot.price,
+        price: parseFloat(spot.price),
         createdAt: spot.createdAt.toISOString().replace('T', ' ').replace('Z', ''),
         updatedAt: spot.updatedAt.toISOString().replace('T', ' ').replace('Z', ''),
         avgRating: avgRating,
