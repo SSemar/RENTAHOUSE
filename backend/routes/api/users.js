@@ -60,7 +60,11 @@ router.post(
       if (existingUser.username === username) {
         err.errors.username = 'User with that username already exists';
       }
-      return next(err);
+      // Return 500 status code with the appropriate error message and errors object
+      return res.status(500).json({
+        message: 'User already exists',
+        errors: err.errors
+      });
     }
 
     const hashedPassword = bcrypt.hashSync(password);
@@ -76,6 +80,7 @@ router.post(
 
     await setTokenCookie(res, safeUser);
 
+    // Return 201 status code with the user information if the user is successfully created
     return res.status(201).json({
       user: safeUser,
     });

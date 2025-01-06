@@ -543,7 +543,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
       stars,
     });
 
-    // Fetch the newly created review with associated data
+    
     const createdReview = await Review.findByPk(newReview.id, {
       include: [
         { model: User, attributes: ['id', 'firstName', 'lastName'] },
