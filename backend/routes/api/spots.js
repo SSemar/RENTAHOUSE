@@ -218,11 +218,27 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
       price
     });
 
-    return res.status(201).json(newSpot);
+    return res.status(201).json({
+      id: newSpot.id,
+      ownerId: newSpot.ownerId,
+      address: newSpot.address,
+      city: newSpot.city,
+      state: newSpot.state,
+      country: newSpot.country,
+      lat: newSpot.lat,
+      lng: newSpot.lng,
+      name: newSpot.name,
+      description: newSpot.description,
+      price: newSpot.price,
+      createdAt: newSpot.createdAt,
+      updatedAt: newSpot.updatedAt
+    });
   } catch (error) {
     next(error);
   }
 });
+
+
  //! Add an Image to a Spot based on the Spot's id
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
