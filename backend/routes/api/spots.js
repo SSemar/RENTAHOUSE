@@ -40,7 +40,6 @@ const validateSpot = [
   handleValidationErrors,
 ];
 
-
 //! GET all spots
 router.get('/', async (req, res, next) => {
   try {
@@ -224,9 +223,8 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     next(error);
   }
 });
-
-//! Add an Image to a Spot based on the Spot's id
-router.post('/spots/:spotId/images', requireAuth, async (req, res, next) => {
+ //! Add an Image to a Spot based on the Spot's id
+router.post('/:spotId/images', requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
   const { url, preview } = req.body;
   const userId = req.user.id;
