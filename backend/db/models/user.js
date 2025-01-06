@@ -1,11 +1,12 @@
 'use strict';
 
-const { Model, Validator } = require('sequelize');
+const { Model } = require('sequelize');
+const validator = require('validator'); // Import the validator library
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // define association here
+      // Define associations here
       User.hasMany(models.Spot, { foreignKey: 'ownerId' });
       User.hasMany(models.Review, { foreignKey: 'userId' });
       User.hasMany(models.Booking, { foreignKey: 'userId' });
