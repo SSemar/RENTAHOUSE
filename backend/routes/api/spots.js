@@ -5,7 +5,7 @@ const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models'
 const { check, validationResult } = require('express-validator');
 const { requireAuth } = require('../../utils/auth');
 const { Op } = require('sequelize');
-
+const { handleValidationErrors } = require('../../utils/validation');
 
 
 const validateSpot = [
@@ -226,7 +226,7 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
 });
 
 //! Add an Image to a Spot based on the Spot's id
-router.post('/:spotId/images', requireAuth, async (req, res, next) => {
+router.post('/spots/:spotId/images', requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
   const { url, preview } = req.body;
   const userId = req.user.id;
