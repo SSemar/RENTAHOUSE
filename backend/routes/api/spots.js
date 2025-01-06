@@ -37,19 +37,7 @@ const validateSpot = [
   check('price')
     .isFloat({ min: 0 })
     .withMessage('Price per day must be a positive number'),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const err = new Error('Validation error');
-      err.status = 400;
-      err.errors = errors.array().reduce((acc, error) => {
-        acc[error.param] = error.msg;
-        return acc;
-      }, {});
-      return next(err);
-    }
-    next();
-  }
+  handleValidationErrors,
 ];
 
 
@@ -233,17 +221,6 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
 
     return res.status(201).json(newSpot);
   } catch (error) {
-    if (error.name === 'SequelizeValidationError') {
-      const errors = error.errors.reduce((acc, err) => {
-        acc[err.path] = err.message;
-        return acc;
-      }, {});
-
-      return res.status(400).json({
-        message: 'Validation error',
-        errors: errors
-      });
-    }
     next(error);
   }
 });
