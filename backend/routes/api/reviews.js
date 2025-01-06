@@ -3,7 +3,7 @@ const router = express.Router();
 const { Spot, Review, User, ReviewImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { check, validationResult } = require('express-validator');
-
+const { handleValidationErrors } = require('../../utils/validation');
 
 
 // Validation middleware for creating and updating a review
@@ -89,17 +89,18 @@ router.get('/current', requireAuth, async (req, res, next) => {
           price: spot.price,
           previewImage: previewImage
         },
-        ReviewImages: review.ReviewImages
+        ReviewImages: review.ReviewImages.map(image => ({
+          id: image.id,
+          url: image.url
+        }))
       };
     });
 
     return res.status(200).json({ Reviews: reviewsInfo });
-  } catch (err) {
-    console.error('Error fetching reviews:', err.message, err.stack);
-    return res.status(500).json({ message: 'Internal server error' });
+  } catch (error) {
+    next(error);
   }
 });
-
 
 // //!!_________________________________________________
 // router.get('/spot/:spotId/reviews', async (req, res, next) => {
