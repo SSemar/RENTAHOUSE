@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // Define associations here
       Spot.belongsTo(models.User, { as: 'Owner', foreignKey: 'ownerId' });
-      Spot.belongsTo(models.User, { foreignKey: 'ownerId' });
       Spot.hasMany(models.Review, { foreignKey: 'spotId' });
       Spot.hasMany(models.Booking, { foreignKey: 'spotId' });
       Spot.hasMany(models.SpotImage, { foreignKey: 'spotId' });
@@ -16,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
 
   Spot.init(
     {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
       ownerId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -73,4 +78,3 @@ module.exports = (sequelize, DataTypes) => {
 
   return Spot;
 };
-

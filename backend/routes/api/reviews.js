@@ -101,68 +101,68 @@ router.get('/current', requireAuth, async (req, res, next) => {
 });
 
 
-//!!_________________________________________________
-router.get('/spot/:spotId/reviews', async (req, res, next) => {
-  const { spotId } = req.params;
+// //!!_________________________________________________
+// router.get('/spot/:spotId/reviews', async (req, res, next) => {
+//   const { spotId } = req.params;
 
-  // Check if spot exists
-  const spot = await Spot.findByPk(spotId);
-  if (!spot) {
-    return res.status(404).json({ message: "Spot couldn't be found" });
-  }
+//   // Check if spot exists
+//   const spot = await Spot.findByPk(spotId);
+//   if (!spot) {
+//     return res.status(404).json({ message: "Spot couldn't be found" });
+//   }
 
-  // Fetch reviews for the spot
-  const reviews = await Review.findAll({
-    where: { spotId },
-    include: [
-      { model: User, attributes: ['id', 'firstName', 'lastName'] },
-      { model: ReviewImage, as: 'ReviewImages', attributes: ['id', 'url'] },
-    ],
-  });
+//   // Fetch reviews for the spot
+//   const reviews = await Review.findAll({
+//     where: { spotId },
+//     include: [
+//       { model: User, attributes: ['id', 'firstName', 'lastName'] },
+//       { model: ReviewImage, as: 'ReviewImages', attributes: ['id', 'url'] },
+//     ],
+//   });
 
-  res.status(200).json({ Reviews: reviews });
-});
+//   res.status(200).json({ Reviews: reviews });
+// });
 
 
-//!---------------------------------------------------
-router.post('/spot/:spotId/reviews', requireAuth, async (req, res, next) => {
-  const { spotId } = req.params;
-  const { review, stars } = req.body;
-  const userId = req.user.id;
+// //!---------------------------------------------------
+// router.post('/spot/:spotId/reviews', requireAuth, async (req, res, next) => {
+//   const { spotId } = req.params;
+//   const { review, stars } = req.body;
+//   const userId = req.user.id;
 
-  // Validate input
-  if (!review || stars === undefined || stars < 1 || stars > 5) {
-    return res.status(400).json({
-      message: "Bad Request",
-      errors: {
-        review: !review ? "Review text is required" : undefined,
-        stars: stars === undefined ? "Stars must be an integer from 1 to 5" : undefined,
-      },
-    });
-  }
+//   // Validate input
+//   if (!review || stars === undefined || stars < 1 || stars > 5) {
+//     return res.status(400).json({
+//       message: "Bad Request",
+//       errors: {
+//         review: !review ? "Review text is required" : undefined,
+//         stars: stars === undefined ? "Stars must be an integer from 1 to 5" : undefined,
+//       },
+//     });
+//   }
 
-  // Check if spot exists
-  const spot = await Spot.findByPk(spotId);
-  if (!spot) {
-    return res.status(404).json({ message: "Spot couldn't be found" });
-  }
+//   // Check if spot exists
+//   const spot = await Spot.findByPk(spotId);
+//   if (!spot) {
+//     return res.status(404).json({ message: "Spot couldn't be found" });
+//   }
 
-  // Check if the user already has a review for the spot
-  const existingReview = await Review.findOne({ where: { spotId, userId } });
-  if (existingReview) {
-    return res.status(500).json({ message: "User already has a review for this spot" });
-  }
+//   // Check if the user already has a review for the spot
+//   const existingReview = await Review.findOne({ where: { spotId, userId } });
+//   if (existingReview) {
+//     return res.status(500).json({ message: "User already has a review for this spot" });
+//   }
 
-  // Create the review
-  const newReview = await Review.create({
-    userId,
-    spotId,
-    review,
-    stars,
-  });
+//   // Create the review
+//   const newReview = await Review.create({
+//     userId,
+//     spotId,
+//     review,
+//     stars,
+//   });
 
-  res.status(201).json(newReview);
-});
+//   res.status(201).json(newReview);
+// });
 
 
 //! POST add a new image to a review based on review id
