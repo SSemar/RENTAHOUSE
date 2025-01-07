@@ -45,23 +45,29 @@ router.get('/current', requireAuth, async (req, res, next) => {
         { model: User, attributes: ['id', 'firstName', 'lastName'] },
         {
           model: Spot,
-          attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
+          attributes: [
+            'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price',
+          ],
           include: [
             {
               model: SpotImage,
               attributes: ['url'],
               where: { preview: true },
-              required: false
-            }
-          ]
+              required: false, // Include Spots without preview images
+            },
+          ],
         },
-        { model: ReviewImage, as: 'ReviewImages', attributes: ['id', 'url'] }
-      ]
+        {
+          model: ReviewImage,
+          as: 'ReviewImages',
+          attributes: ['id', 'url'],
+        },
+      ],
     });
 
-    const reviewsInfo = reviews.map(review => {
+    const reviewsInfo = reviews.map((review) => {
       const spot = review.Spot;
-      const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
+      const previewImage = spot?.SpotImages?.[0]?.url || null;
 
       return {
         id: review.id,
@@ -74,96 +80,37 @@ router.get('/current', requireAuth, async (req, res, next) => {
         User: {
           id: review.User.id,
           firstName: review.User.firstName,
-          lastName: review.User.lastName
+          lastName: review.User.lastName,
         },
-        Spot: {
-          id: spot.id,
-          ownerId: spot.ownerId,
-          address: spot.address,
-          city: spot.city,
-          state: spot.state,
-          country: spot.country,
-          lat: spot.lat,
-          lng: spot.lng,
-          name: spot.name,
-          price: spot.price,
-          previewImage: previewImage
-        },
-        ReviewImages: review.ReviewImages.map(image => ({
+        Spot: spot
+          ? {
+              id: spot.id,
+              ownerId: spot.ownerId,
+              address: spot.address,
+              city: spot.city,
+              state: spot.state,
+              country: spot.country,
+              lat: spot.lat,
+              lng: spot.lng,
+              name: spot.name,
+              price: spot.price,
+              previewImage: previewImage,
+            }
+          : null,
+        ReviewImages: review.ReviewImages.map((image) => ({
           id: image.id,
-          url: image.url
-        }))
+          url: image.url,
+        })),
       };
     });
 
     return res.status(200).json({ Reviews: reviewsInfo });
   } catch (error) {
+    console.error(error); // Debugging
     next(error);
   }
 });
 
-// //!!_________________________________________________
-// router.get('/spot/:spotId/reviews', async (req, res, next) => {
-//   const { spotId } = req.params;
-
-//   // Check if spot exists
-//   const spot = await Spot.findByPk(spotId);
-//   if (!spot) {
-//     return res.status(404).json({ message: "Spot couldn't be found" });
-//   }
-
-//   // Fetch reviews for the spot
-//   const reviews = await Review.findAll({
-//     where: { spotId },
-//     include: [
-//       { model: User, attributes: ['id', 'firstName', 'lastName'] },
-//       { model: ReviewImage, as: 'ReviewImages', attributes: ['id', 'url'] },
-//     ],
-//   });
-
-//   res.status(200).json({ Reviews: reviews });
-// });
-
-
-// //!---------------------------------------------------
-// router.post('/spot/:spotId/reviews', requireAuth, async (req, res, next) => {
-//   const { spotId } = req.params;
-//   const { review, stars } = req.body;
-//   const userId = req.user.id;
-
-//   // Validate input
-//   if (!review || stars === undefined || stars < 1 || stars > 5) {
-//     return res.status(400).json({
-//       message: "Bad Request",
-//       errors: {
-//         review: !review ? "Review text is required" : undefined,
-//         stars: stars === undefined ? "Stars must be an integer from 1 to 5" : undefined,
-//       },
-//     });
-//   }
-
-//   // Check if spot exists
-//   const spot = await Spot.findByPk(spotId);
-//   if (!spot) {
-//     return res.status(404).json({ message: "Spot couldn't be found" });
-//   }
-
-//   // Check if the user already has a review for the spot
-//   const existingReview = await Review.findOne({ where: { spotId, userId } });
-//   if (existingReview) {
-//     return res.status(500).json({ message: "User already has a review for this spot" });
-//   }
-
-//   // Create the review
-//   const newReview = await Review.create({
-//     userId,
-//     spotId,
-//     review,
-//     stars,
-//   });
-
-//   res.status(201).json(newReview);
-// });
 
 
 //! POST add a new image to a review based on review id
@@ -198,23 +145,12 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 });
 
 //! Edit a Review
-router.put('/:reviewId', requireAuth, async (req, res, next) => {
+router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
   const { reviewId } = req.params;
   const { review, stars } = req.body;
   const userId = req.user.id;
 
   try {
-    // Validate review input
-    if (!review || stars === undefined || stars < 1 || stars > 5) {
-      return res.status(400).json({
-        message: "Validation error",
-        errors: {
-          review: !review ? "Review text is required" : undefined,
-          stars: stars === undefined ? "Stars must be an integer from 1 to 5" : undefined,
-        },
-      });
-    }
-
     // Check if the review exists
     const existingReview = await Review.findByPk(reviewId);
     if (!existingReview) {
@@ -231,8 +167,10 @@ router.put('/:reviewId', requireAuth, async (req, res, next) => {
     existingReview.stars = stars;
     await existingReview.save();
 
+    // Respond with the updated review
     return res.status(200).json(existingReview);
   } catch (error) {
+    // Handle Sequelize validation errors consistently
     if (error.name === 'SequelizeValidationError') {
       const errors = error.errors.reduce((acc, err) => {
         acc[err.path] = err.message;
@@ -241,9 +179,10 @@ router.put('/:reviewId', requireAuth, async (req, res, next) => {
 
       return res.status(400).json({
         message: 'Validation error',
-        errors: errors
+        errors
       });
     }
+    // Pass any other errors to the global error handler
     next(error);
   }
 });
