@@ -10,70 +10,80 @@ module.exports = {
     await queryInterface.createTable('Spots', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: true, 
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       ownerId: {
-        type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: 'Users',
-          key: 'id'
-        },
+        type: Sequelize.INTEGER,
+        references: { model: 'Users', key: 'id' }, 
         onDelete: 'CASCADE'
       },
       address: {
+        allowNull: false,
         type: Sequelize.STRING,
-        allowNull: false
       },
       city: {
+        allowNull: false,
         type: Sequelize.STRING,
-        allowNull: false
       },
       state: {
+        allowNull: false,
         type: Sequelize.STRING,
-        allowNull: false
       },
       country: {
+        allowNull: false,
         type: Sequelize.STRING,
-        allowNull: false
       },
       lat: {
+        allowNull: true, 
         type: Sequelize.DECIMAL,
-        allowNull: true
+        validate: {
+          min: -90,
+          max: 90,
+        },
       },
       lng: {
+        allowNull: true,
         type: Sequelize.DECIMAL,
-        allowNull: true
+        validate: {
+          min: -180,
+          max: 180,
+        },
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING,
-        allowNull: false
+        validate: {
+          len: [1, 50],
+        },
       },
       description: {
+        allowNull: false,
         type: Sequelize.TEXT,
-        allowNull: false
       },
       price: {
+        allowNull: false,
         type: Sequelize.DECIMAL,
-        allowNull: false
+        validate: {
+          min: 0,
+        },
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       }
-    }, options);
+    });
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = "Spots";
-    await queryInterface.dropTable(options);
+    await queryInterface.dropTable('Spots');
   }
 };
