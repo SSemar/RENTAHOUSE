@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Spot, Review, User, ReviewImage } = require('../../db/models');
+const { Review, Spot, SpotImage, User } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { check, validationResult } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -36,38 +36,37 @@ const validateReview = [
 
 //! Get all Reviews of the Current User
 router.get('/current', requireAuth, async (req, res, next) => {
-  const userId = req.user.id;
+  const { user } = req;
 
   try {
     const reviews = await Review.findAll({
-      where: { userId },
+      where: { userId: user.id },
       include: [
-        { model: User, attributes: ['id', 'firstName', 'lastName'] },
+        {
+          model: User,
+          as: 'User',
+          attributes: ['id', 'firstName', 'lastName']
+        },
         {
           model: Spot,
-          attributes: [
-            'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price',
-          ],
-          include: [
-            {
-              model: SpotImage,
-              attributes: ['url'],
-              where: { preview: true },
-              required: false, // Include Spots without preview images
-            },
-          ],
+          attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
+          include: {
+            model: SpotImage,
+            attributes: ['url'],
+            where: { preview: true },
+            required: false
+          }
         },
         {
           model: ReviewImage,
-          as: 'ReviewImages',
-          attributes: ['id', 'url'],
-        },
-      ],
+          attributes: ['id', 'url']
+        }
+      ]
     });
 
-    const reviewsInfo = reviews.map((review) => {
+    const reviewsWithPreviewImage = reviews.map(review => {
       const spot = review.Spot;
-      const previewImage = spot?.SpotImages?.[0]?.url || null;
+      const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
 
       return {
         id: review.id,
@@ -77,36 +76,26 @@ router.get('/current', requireAuth, async (req, res, next) => {
         stars: review.stars,
         createdAt: review.createdAt,
         updatedAt: review.updatedAt,
-        User: {
-          id: review.User.id,
-          firstName: review.User.firstName,
-          lastName: review.User.lastName,
+        User: review.User,
+        Spot: {
+          id: spot.id,
+          ownerId: spot.ownerId,
+          address: spot.address,
+          city: spot.city,
+          state: spot.state,
+          country: spot.country,
+          lat: spot.lat,
+          lng: spot.lng,
+          name: spot.name,
+          price: spot.price,
+          previewImage
         },
-        Spot: spot
-          ? {
-              id: spot.id,
-              ownerId: spot.ownerId,
-              address: spot.address,
-              city: spot.city,
-              state: spot.state,
-              country: spot.country,
-              lat: spot.lat,
-              lng: spot.lng,
-              name: spot.name,
-              price: spot.price,
-              previewImage: previewImage,
-            }
-          : null,
-        ReviewImages: review.ReviewImages.map((image) => ({
-          id: image.id,
-          url: image.url,
-        })),
+        ReviewImages: review.ReviewImages
       };
     });
 
-    return res.status(200).json({ Reviews: reviewsInfo });
+    return res.status(200).json({ Reviews: reviewsWithPreviewImage });
   } catch (error) {
-    console.error(error); // Debugging
     next(error);
   }
 });
