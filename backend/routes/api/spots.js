@@ -6,7 +6,7 @@ const { check, validationResult } = require('express-validator');
 const { requireAuth } = require('../../utils/auth');
 const { Op } = require('sequelize');
 const { handleValidationErrors } = require('../../utils/validation');
-
+const moment = require('moment'); 
 
 const validateSpot = [
   check('address')
