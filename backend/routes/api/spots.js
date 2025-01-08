@@ -175,6 +175,7 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
   }
 });
 
+
 //! GET Spots owned by Current User
 router.get('/current', requireAuth, async (req, res, next) => {
   const { user } = req;

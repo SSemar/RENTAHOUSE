@@ -18,11 +18,15 @@ router.use('/session', sessionRouter);
 router.use('/users', usersRouter);
 router.use('/spots', spotRouter);
 router.use('/reviews', reviewRouter);
-
-
-
 router.use('/bookings', bookingRouter);
 router.use('/images', imageRouter);
+
+
+const { deleteSpotImage, deleteReviewImage } = require('./images');
+
+router.delete('/spot-images/:imageId', deleteSpotImage);
+router.delete('/review-images/:imageId', deleteReviewImage);
+
 
 
 

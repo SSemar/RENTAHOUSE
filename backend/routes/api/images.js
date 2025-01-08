@@ -4,7 +4,7 @@ const router = express.Router();
 const { requireAuth } = require('../../utils/auth');
 
 // DELETE a Spot Image
-router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
+const deleteSpotImage = async (req, res, next) => {
   const { imageId } = req.params;
 
   console.log(`DELETE /spot-images/${imageId} route hit`);
@@ -37,10 +37,10 @@ router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
     console.error(error);
     next(error);
   }
-});
+};
 
 // DELETE a Review Image
-router.delete('/review-images/:imageId', requireAuth, async (req, res, next) => {
+const deleteReviewImage = async (req, res, next) => {
   const { imageId } = req.params;
 
   console.log(`DELETE /review-images/${imageId} route hit`);
@@ -73,6 +73,10 @@ router.delete('/review-images/:imageId', requireAuth, async (req, res, next) => 
     console.error(error);
     next(error);
   }
-});
+};
 
+module.exports = {
+  deleteSpotImage,
+  deleteReviewImage
+};
 module.exports = router;
