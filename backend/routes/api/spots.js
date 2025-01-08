@@ -199,53 +199,30 @@ router.get('/:spotId', async (req, res, next) => {
   }
 });
 
-//! POST create a new spot
-router.post(
-  '/',
-  requireAuth,
-  validateSpot,
-  async (req, res, next) => {
-    const { address, city, state, country, lat, lng, name, description, price } = req.body;
-    const { user } = req;
+//! Create a Spot
+router.post('/', requireAuth, async (req, res, next) => {
+  const { address, city, state, country, lat, lng, name, description, price } = req.body;
+  const { user } = req;
 
-    try {
-      // Ensure the id field is not manually set
-      if (req.body.id) {
-        return res.status(400).json({
-          message: 'Bad Request',
-          errors: {
-            id: 'id field should not be set manually'
-          }
-        });
-      }
+  try {
+    const newSpot = await Spot.create({
+      ownerId: user.id,
+      address,
+      city,
+      state,
+      country,
+      lat: parseFloat(lat),
+      lng: parseFloat(lng),
+      name,
+      description,
+      price: parseFloat(price),
+    });
 
-      const spot = await Spot.create({
-        ownerId: user.id,
-        address,
-        city,
-        state,
-        country,
-        lat,
-        lng,
-        name,
-        description,
-        price
-      });
-
-      return res.status(201).json(spot);
-    } catch (error) {
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(400).json({
-          message: 'Validation error',
-          errors: {
-            id: 'id must be unique'
-          }
-        });
-      }
-      next(error);
-    }
+    return res.status(201).json(newSpot);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
  //! Add an Image to a Spot based on the Spot's id
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {

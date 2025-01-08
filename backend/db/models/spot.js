@@ -1,30 +1,28 @@
-'use strict';
-
 const { Model } = require('sequelize');
+const moment = require('moment');
 
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
     static associate(models) {
-      // Define associations here
-      Spot.belongsTo(models.User, { as: 'Owner', foreignKey: 'ownerId' });
-      Spot.hasMany(models.Review, { foreignKey: 'spotId' });
-      Spot.hasMany(models.Booking, { foreignKey: 'spotId' });
+      // define association here
       Spot.hasMany(models.SpotImage, { foreignKey: 'spotId' });
+      Spot.belongsTo(models.User, { foreignKey: 'ownerId' });
+    }
+
+    toJSON() {
+      return {
+        ...this.get(),
+        createdAt: moment(this.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment(this.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+      };
     }
   }
 
   Spot.init(
     {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-      },
       ownerId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {model: 'Users'},
       },
       address: {
         type: DataTypes.STRING,
@@ -44,26 +42,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       lat: {
         type: DataTypes.FLOAT,
-        validate: {
-          min: -90,
-          max: 90,
-          isFloat: true,
-        },
+        allowNull: false,
       },
       lng: {
         type: DataTypes.FLOAT,
-        validate: {
-          min: -180,
-          max: 180,
-          isFloat: true,
-        },
+        allowNull: false,
       },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       description: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       price: {
@@ -76,6 +66,5 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Spot',
     }
   );
-
   return Spot;
 };
