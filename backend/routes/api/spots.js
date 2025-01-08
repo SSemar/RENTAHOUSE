@@ -87,57 +87,6 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-//! GET Spots owned by Current User
-router.get('/current', requireAuth, async (req, res, next) => {
-  const { user } = req;
-
-  try {
-    const spots = await Spot.findAll({
-      where: { ownerId: user.id },
-      include: [
-        {
-          model: SpotImage,
-          attributes: ['url'],
-          where: { preview: true },
-          required: false
-        },
-        {
-          model: Review,
-          attributes: ['stars']
-        }
-      ]
-    });
-
-    const spotsInfo = spots.map(spot => {
-      const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
-      const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
-      const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
-
-      return {
-        id: spot.id,
-        ownerId: spot.ownerId,
-        address: spot.address,
-        city: spot.city,
-        state: spot.state,
-        country: spot.country,
-        lat: parseFloat(spot.lat),
-        lng: parseFloat(spot.lng),
-        name: spot.name,
-        description: spot.description,
-        price: parseFloat(spot.price),
-        createdAt: moment(spot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-        updatedAt: moment(spot.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
-        avgRating,
-        previewImage
-      };
-    });
-
-    return res.status(200).json({ Spots: spotsInfo });
-  } catch (error) {
-    next(error);
-  }
-});
-
 
 //! GET details of a Spot from an id
 router.get('/:spotId', async (req, res, next) => {
@@ -226,6 +175,56 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
   }
 });
 
+//! GET Spots owned by Current User
+router.get('/current', requireAuth, async (req, res, next) => {
+  const { user } = req;
+
+  try {
+    const spots = await Spot.findAll({
+      where: { ownerId: user.id },
+      include: [
+        {
+          model: SpotImage,
+          attributes: ['url'],
+          where: { preview: true },
+          required: false
+        },
+        {
+          model: Review,
+          attributes: ['stars']
+        }
+      ]
+    });
+
+    const spotsInfo = spots.map(spot => {
+      const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
+      const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
+      const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
+
+      return {
+        id: spot.id,
+        ownerId: spot.ownerId,
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        lat: parseFloat(spot.lat),
+        lng: parseFloat(spot.lng),
+        name: spot.name,
+        description: spot.description,
+        price: parseFloat(spot.price),
+        createdAt: moment(spot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment(spot.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        avgRating,
+        previewImage
+      };
+    });
+
+    return res.status(200).json({ Spots: spotsInfo });
+  } catch (error) {
+    next(error);
+  }
+});
 
 
  //! Add an Image to a Spot based on the Spot's id
