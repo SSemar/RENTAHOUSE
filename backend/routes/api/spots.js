@@ -89,10 +89,11 @@ router.get('/', async (req, res, next) => {
 
 //! GET Spots owned by Current User
 router.get('/current', requireAuth, async (req, res, next) => {
-  const userId = req.user.id;
+  const { user } = req;
+
   try {
     const spots = await Spot.findAll({
-      where: { ownerId: userId },
+      where: { ownerId: user.id },
       include: [
         {
           model: SpotImage,
@@ -110,6 +111,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     const spotsInfo = spots.map(spot => {
       const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
       const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
+      const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
 
       return {
         id: spot.id,
@@ -118,15 +120,15 @@ router.get('/current', requireAuth, async (req, res, next) => {
         city: spot.city,
         state: spot.state,
         country: spot.country,
-        lat: spot.lat,
-        lng: spot.lng,
+        lat: parseFloat(spot.lat),
+        lng: parseFloat(spot.lng),
         name: spot.name,
         description: spot.description,
-        price: spot.price,
-        createdAt: spot.createdAt,
-        updatedAt: spot.updatedAt,
-        avgRating: avgRating, // Calculate avgRating
-        previewImage: spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null, 
+        price: parseFloat(spot.price),
+        createdAt: moment(spot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment(spot.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        avgRating,
+        previewImage
       };
     });
 
@@ -136,9 +138,10 @@ router.get('/current', requireAuth, async (req, res, next) => {
   }
 });
 
+
 //! GET details of a Spot from an id
 router.get('/:spotId', async (req, res, next) => {
-  const spotId = req.params.spotId;
+  const { spotId } = req.params;
 
   try {
     const spot = await Spot.findByPk(spotId, {
@@ -149,7 +152,7 @@ router.get('/:spotId', async (req, res, next) => {
         },
         {
           model: Review,
-          attributes: ['stars']
+          attributes: []
         },
         {
           model: User,
@@ -160,13 +163,13 @@ router.get('/:spotId', async (req, res, next) => {
     });
 
     if (!spot) {
-      const err = new Error("Spot couldn't be found");
-      err.status = 404;
-      return next(err);
+      return res.status(404).json({
+        message: "Spot couldn't be found"
+      });
     }
 
-    const numReviews = spot.Reviews.length;
-    const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
+    const numReviews = await Review.count({ where: { spotId } });
+    const totalStars = await Review.sum('stars', { where: { spotId } });
     const avgStarRating = numReviews > 0 ? totalStars / numReviews : null;
 
     const spotDetails = {
@@ -176,21 +179,17 @@ router.get('/:spotId', async (req, res, next) => {
       city: spot.city,
       state: spot.state,
       country: spot.country,
-      lat: spot.lat,
-      lng: spot.lng,
+      lat: parseFloat(spot.lat),
+      lng: parseFloat(spot.lng),
       name: spot.name,
       description: spot.description,
-      price: spot.price,
-      createdAt: spot.createdAt,
-      updatedAt: spot.updatedAt,
-      numReviews: numReviews,
-      avgStarRating: avgStarRating,
+      price: parseFloat(spot.price),
+      createdAt: moment(spot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment(spot.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+      numReviews,
+      avgStarRating,
       SpotImages: spot.SpotImages,
-      Owner: {
-        id: spot.Owner.id,
-        firstName: spot.Owner.firstName,
-        lastName: spot.Owner.lastName
-      }
+      Owner: spot.Owner
     };
 
     return res.status(200).json(spotDetails);
@@ -200,7 +199,7 @@ router.get('/:spotId', async (req, res, next) => {
 });
 
 //! Create a Spot
-router.post('/', requireAuth, async (req, res, next) => {
+router.post('/', requireAuth, validateSpot, async (req, res, next) => {
   const { address, city, state, country, lat, lng, name, description, price } = req.body;
   const { user } = req;
 
@@ -218,12 +217,25 @@ router.post('/', requireAuth, async (req, res, next) => {
       price: parseFloat(price),
     });
 
-    return res.status(201).json(newSpot);
+    return res.status(201).json({
+      id: newSpot.id,
+      ownerId: newSpot.ownerId,
+      address: newSpot.address,
+      city: newSpot.city,
+      state: newSpot.state,
+      country: newSpot.country,
+      lat: newSpot.lat,
+      lng: newSpot.lng,
+      name: newSpot.name,
+      description: newSpot.description,
+      price: newSpot.price,
+      createdAt: moment(newSpot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: moment(newSpot.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+    });
   } catch (error) {
     next(error);
   }
 });
-
  //! Add an Image to a Spot based on the Spot's id
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
