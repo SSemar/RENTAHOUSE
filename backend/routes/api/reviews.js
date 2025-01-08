@@ -157,11 +157,20 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
     existingReview.stars = stars;
     await existingReview.save();
 
-    return res.status(200).json(existingReview);
+    return res.status(200).json({
+      id: existingReview.id,
+      userId: existingReview.userId,
+      spotId: existingReview.spotId,
+      review: existingReview.review,
+      stars: existingReview.stars,
+      createdAt: existingReview.createdAt,
+      updatedAt: existingReview.updatedAt
+    });
   } catch (error) {
     next(error);
   }
 });
+
 
 //! DELETE a review
 router.delete('/:reviewId', requireAuth, async (req, res, next) => {
