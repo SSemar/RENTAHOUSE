@@ -200,7 +200,6 @@ router.get('/:spotId', async (req, res, next) => {
 });
 
 //! POST create a new spot
-// Create a Spot
 router.post(
   '/',
   requireAuth,
@@ -210,6 +209,16 @@ router.post(
     const { user } = req;
 
     try {
+      // Ensure the id field is not manually set
+      if (req.body.id) {
+        return res.status(400).json({
+          message: 'Bad Request',
+          errors: {
+            id: 'id field should not be set manually'
+          }
+        });
+      }
+
       const spot = await Spot.create({
         ownerId: user.id,
         address,
@@ -225,6 +234,14 @@ router.post(
 
       return res.status(201).json(spot);
     } catch (error) {
+      if (error.name === 'SequelizeUniqueConstraintError') {
+        return res.status(400).json({
+          message: 'Validation error',
+          errors: {
+            id: 'id must be unique'
+          }
+        });
+      }
       next(error);
     }
   }
