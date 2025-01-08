@@ -198,7 +198,10 @@ router.get('/:spotId', async (req, res, next) => {
   }
 });
 
-//! Create a Spot
+//! RETURN AS STRING ATM WORK ON FINDING A WAY TO RETURN NUMBER
+//ideas maybe change the models to return as number
+
+//! create a new spot
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
   const { address, city, state, country, lat, lng, name, description, price } = req.body;
   const { user } = req;
@@ -217,25 +220,14 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
       price: parseFloat(price),
     });
 
-    return res.status(201).json({
-      id: newSpot.id,
-      ownerId: newSpot.ownerId,
-      address: newSpot.address,
-      city: newSpot.city,
-      state: newSpot.state,
-      country: newSpot.country,
-      lat: newSpot.lat,
-      lng: newSpot.lng,
-      name: newSpot.name,
-      description: newSpot.description,
-      price: newSpot.price,
-      createdAt: moment(newSpot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-      updatedAt: moment(newSpot.updatedAt).format('YYYY-MM-DD HH:mm:ss')
-    });
+    return res.status(201).json(newSpot);
   } catch (error) {
     next(error);
   }
 });
+
+
+
  //! Add an Image to a Spot based on the Spot's id
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
