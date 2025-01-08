@@ -2,7 +2,6 @@ const express = require('express');
 const { SpotImage, ReviewImage, Spot, Review } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
-
 // DELETE a Spot Image
 const deleteSpotImage = async (req, res, next) => {
   const { imageId } = req.params;
@@ -74,6 +73,10 @@ const deleteReviewImage = async (req, res, next) => {
     next(error);
   }
 };
+
+router.delete('/spot-images/:imageId', requireAuth, deleteSpotImage);
+router.delete('/review-images/:imageId', requireAuth, deleteReviewImage);
+
 
 module.exports = {
   deleteSpotImage,
