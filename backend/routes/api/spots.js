@@ -370,6 +370,37 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
   }
 });
 
+//! DELETE a Spot Image
+router.delete('/spot-images/:imageId', requireAuth, async (req, res, next) => {
+  const { imageId } = req.params;
+
+  try {
+    const spotImage = await SpotImage.findByPk(imageId, {
+      include: {
+        model: Spot,
+        attributes: ['ownerId']
+      }
+    });
+
+    if (!spotImage) {
+      return res.status(404).json({
+        message: "Spot Image couldn't be found"
+      });
+    }
+
+    if (spotImage.Spot.ownerId !== req.user.id) {
+      return res.status(403).json({
+        message: "Forbidden"
+      });
+    }
+
+    await spotImage.destroy();
+    return res.json({ message: 'Successfully deleted' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 //! GET all spots with query filters
 router.get('/', async (req, res, next) => {
