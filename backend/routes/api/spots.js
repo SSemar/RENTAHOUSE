@@ -57,10 +57,11 @@ router.get('/', async (req, res, next) => {
         }
       ]
     });
-    //calc avg stars var and map array method
+
     const spotsInfo = spots.map(spot => {
       const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
       const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
+      const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
 
       return {
         id: spot.id,
@@ -74,10 +75,10 @@ router.get('/', async (req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: parseFloat(spot.price),
-        createdAt: spot.createdAt.toISOString().replace('T', ' ').replace('Z', ''),
-        updatedAt: spot.updatedAt.toISOString().replace('T', ' ').replace('Z', ''),
-        avgRating: avgRating,
-        previewImage: spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null,
+        createdAt: moment(spot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment(spot.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        avgRating,
+        previewImage
       };
     });
 
@@ -86,7 +87,6 @@ router.get('/', async (req, res, next) => {
     next(error);
   }
 });
-
 
 //! GET details of a Spot from an id
 router.get('/:spotId', async (req, res, next) => {
