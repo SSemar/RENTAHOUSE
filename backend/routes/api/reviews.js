@@ -17,18 +17,17 @@ const validateReview = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const err = new Error('Validation error');
-      err.status = 400;
-      err.errors = errors.array().reduce((acc, error) => {
-        acc[error.param] = error.msg;
-        return acc;
-      }, {});
-      return next(err);
+      return res.status(400).json({
+        message: 'Validation error',
+        errors: errors.array().reduce((acc, error) => {
+          acc[error.param] = error.msg;
+          return acc;
+        }, {})
+      });
     }
     next();
   }
 ];
-
 //seed new data?
 //redo route use current user which works as reference.
 //CHECK THE ROUTE ORDER? Seems corrected not hitting the spotId route
