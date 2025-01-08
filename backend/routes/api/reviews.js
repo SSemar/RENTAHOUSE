@@ -14,19 +14,7 @@ const validateReview = [
   check('stars')
     .isInt({ min: 1, max: 5 })
     .withMessage('Stars must be an integer from 1 to 5'),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        message: 'Validation error',
-        errors: errors.array().reduce((acc, error) => {
-          acc[error.param] = error.msg;
-          return acc;
-        }, {})
-      });
-    }
-    next();
-  }
+  handleValidationErrors
 ];
 //seed new data?
 //redo route use current user which works as reference.
@@ -134,7 +122,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
 
 
-//! edit review 
+//! Edit a Review
 router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
   const { reviewId } = req.params;
   const { review, stars } = req.body;
@@ -156,23 +144,14 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
 
     existingReview.review = review;
     existingReview.stars = stars;
+
     await existingReview.save();
 
-    return res.status(200).json({
-      id: existingReview.id,
-      userId: existingReview.userId,
-      spotId: existingReview.spotId,
-      review: existingReview.review,
-      stars: existingReview.stars,
-      createdAt: existingReview.createdAt,
-      updatedAt: existingReview.updatedAt
-    });
+    return res.status(200).json(existingReview);
   } catch (error) {
     next(error);
   }
 });
-
-
 
 
 //! DELETE a review
