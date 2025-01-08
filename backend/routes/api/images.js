@@ -78,5 +78,5 @@ const deleteReviewImage = async (req, res, next) => {
 module.exports = {
   deleteSpotImage,
   deleteReviewImage,
-  router // Export the router as well
+  router 
 };

@@ -19,7 +19,7 @@ router.use('/bookings', bookingRouter);
 router.use('/images', imageRouter); // This registers the images routes under /images
 
 const { deleteSpotImage, deleteReviewImage } = require('./images');
-
+//! try this maybe the route would get hit.
 router.delete('/spot-images/:imageId', deleteSpotImage);
 router.delete('/review-images/:imageId', deleteReviewImage);
 
