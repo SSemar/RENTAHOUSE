@@ -149,32 +149,8 @@ router.get('/:spotId', async (req, res, next) => {
 
 //! RETURN AS STRING ATM WORK ON FINDING A WAY TO RETURN NUMBER
 //ideas maybe change the models to return as number
-
-//! create a new spot
-router.post('/', requireAuth, validateSpot, async (req, res, next) => {
-  const { address, city, state, country, lat, lng, name, description, price } = req.body;
-  const { user } = req;
-
-  try {
-    const newSpot = await Spot.create({
-      ownerId: user.id,
-      address,
-      city,
-      state,
-      country,
-      lat: parseFloat(lat),
-      lng: parseFloat(lng),
-      name,
-      description,
-      price: parseFloat(price),
-    });
-
-    return res.status(201).json(newSpot);
-  } catch (error) {
-    next(error);
-  }
-});
-
+//! is the route to get all the spots owned by the current user wrong order
+//! I think the order is correct
 
 //! GET Spots owned by Current User
 router.get('/current', requireAuth, async (req, res, next) => {
@@ -226,6 +202,32 @@ router.get('/current', requireAuth, async (req, res, next) => {
     next(error);
   }
 });
+
+//! Create a Spot
+router.post('/', requireAuth, validateSpot, async (req, res, next) => {
+  const { address, city, state, country, lat, lng, name, description, price } = req.body;
+  const { user } = req;
+
+  try {
+    const newSpot = await Spot.create({
+      ownerId: user.id,
+      address,
+      city,
+      state,
+      country,
+      lat: parseFloat(lat),
+      lng: parseFloat(lng),
+      name,
+      description,
+      price: parseFloat(price),
+    });
+
+    return res.status(201).json(newSpot);
+  } catch (error) {
+    next(error);
+  }
+});
+
 
  //! Add an Image to a Spot based on the Spot's id
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
