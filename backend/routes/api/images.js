@@ -1,7 +1,7 @@
 const express = require('express');
 const { SpotImage, ReviewImage, Spot, Review } = require('../../db/models');
-const router = express.Router();
 const { requireAuth } = require('../../utils/auth');
+const router = express.Router();
 
 // DELETE a Spot Image
 const deleteSpotImage = async (req, res, next) => {
@@ -77,6 +77,6 @@ const deleteReviewImage = async (req, res, next) => {
 
 module.exports = {
   deleteSpotImage,
-  deleteReviewImage
+  deleteReviewImage,
+  router // Export the router as well
 };
-module.exports = router;
