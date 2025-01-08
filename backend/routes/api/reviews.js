@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Review, Spot, SpotImage, User } = require('../../db/models');
+const { Review, Spot, SpotImage, User, ReviewImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { check, validationResult } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -102,34 +102,34 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
 
 
-//! POST add a new image to a review based on review id
+//! Add an Image to a Review based on the Review's id
 router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
   const { reviewId } = req.params;
   const { url } = req.body;
 
   try {
     const review = await Review.findByPk(reviewId);
+
     if (!review) {
-      return res.status(404).json({ message: "Review couldn't be found" });
+      return res.status(404).json({
+        message: "Review couldn't be found"
+      });
     }
 
     if (review.userId !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized" });
+      return res.status(403).json({
+        message: "Forbidden"
+      });
     }
 
-    const imageCount = await ReviewImage.count({ where: { reviewId } });
-    if (imageCount >= 10) {
-      return res.status(403).json({ message: "Maximum number of images for this resource was reached" });
-    }
-
-    const newImage = await ReviewImage.create({
+    const reviewImage = await ReviewImage.create({
       reviewId,
-      url,
+      url
     });
 
-    return res.status(201).json(newImage);
-  } catch (err) {
-    next(err);
+    return res.status(201).json(reviewImage);
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -137,41 +137,28 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
   const { reviewId } = req.params;
   const { review, stars } = req.body;
-  const userId = req.user.id;
 
   try {
-    // Check if the review exists
     const existingReview = await Review.findByPk(reviewId);
+
     if (!existingReview) {
-      return res.status(404).json({ message: "Review couldn't be found" });
+      return res.status(404).json({
+        message: "Review couldn't be found"
+      });
     }
 
-    // Check if the review belongs to the current user
-    if (existingReview.userId !== userId) {
-      return res.status(403).json({ message: "Forbidden" });
+    if (existingReview.userId !== req.user.id) {
+      return res.status(403).json({
+        message: "Forbidden"
+      });
     }
 
-    // Update the review
     existingReview.review = review;
     existingReview.stars = stars;
     await existingReview.save();
 
-    // Respond with the updated review
     return res.status(200).json(existingReview);
   } catch (error) {
-    // Handle Sequelize validation errors consistently
-    if (error.name === 'SequelizeValidationError') {
-      const errors = error.errors.reduce((acc, err) => {
-        acc[err.path] = err.message;
-        return acc;
-      }, {});
-
-      return res.status(400).json({
-        message: 'Validation error',
-        errors
-      });
-    }
-    // Pass any other errors to the global error handler
     next(error);
   }
 });
