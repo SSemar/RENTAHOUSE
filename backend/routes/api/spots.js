@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models'); 
-//const spot = require('../../db/models/spot');
+
 const { check, validationResult } = require('express-validator');
 const { requireAuth } = require('../../utils/auth');
 const { Op } = require('sequelize');
@@ -37,7 +37,7 @@ const validateSpot = [
   check('price')
     .isFloat({ min: 0 })
     .withMessage('Price per day must be a positive number'),
-  handleValidationErrors,
+  handleValidationErrors
 ];
 
 //! GET all spots
@@ -200,44 +200,35 @@ router.get('/:spotId', async (req, res, next) => {
 });
 
 //! POST create a new spot
-router.post('/', requireAuth, validateSpot, async (req, res, next) => {
-  const { address, city, state, country, lat, lng, name, description, price } = req.body;
-  const ownerId = req.user.id;
+// Create a Spot
+router.post(
+  '/',
+  requireAuth,
+  validateSpot,
+  async (req, res, next) => {
+    const { address, city, state, country, lat, lng, name, description, price } = req.body;
+    const { user } = req;
 
-  try {
-    const newSpot = await Spot.create({
-      ownerId,
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price
-    });
+    try {
+      const spot = await Spot.create({
+        ownerId: user.id,
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price
+      });
 
-    return res.status(201).json({
-      id: newSpot.id,
-      ownerId: newSpot.ownerId,
-      address: newSpot.address,
-      city: newSpot.city,
-      state: newSpot.state,
-      country: newSpot.country,
-      lat: newSpot.lat,
-      lng: newSpot.lng,
-      name: newSpot.name,
-      description: newSpot.description,
-      price: newSpot.price,
-      createdAt: newSpot.createdAt,
-      updatedAt: newSpot.updatedAt
-    });
-  } catch (error) {
-    next(error);
+      return res.status(201).json(spot);
+    } catch (error) {
+      next(error);
+    }
   }
-});
-
+);
 
  //! Add an Image to a Spot based on the Spot's id
 router.post('/:spotId/images', requireAuth, async (req, res, next) => {
