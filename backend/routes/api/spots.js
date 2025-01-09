@@ -439,6 +439,9 @@ const validateQueryParams = [
 router.get('/', validateQueryParams, async (req, res, next) => {
   const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
+  console.log(`Query parameters: page=${page}, size=${size}, minLat=${minLat}, maxLat=${maxLat}, minLng=${minLng}, maxLng=${maxLng}, minPrice=${minPrice}, maxPrice=${maxPrice}`);
+
+
   // Build where clause for Sequelize
   const where = {};
   if (minLat !== undefined) where.lat = { [Op.gte]: parseFloat(minLat) };
@@ -491,7 +494,7 @@ router.get('/', validateQueryParams, async (req, res, next) => {
         previewImage,
       };
     });
-
+    console.log(`Returning ${spotsInfo.length} spots with page ${page} and size ${size}`);
     return res.status(200).json({
       Spots: spotsInfo,
       page: parseInt(page),
