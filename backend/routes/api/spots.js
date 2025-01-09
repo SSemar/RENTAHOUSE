@@ -412,7 +412,6 @@ const validateQueryParams = [
 ];
 
 //! GET all spots with query filters
-//! GET all spots with query filters
 router.get('/', validateQueryParams, async (req, res, next) => {
   const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
@@ -472,7 +471,6 @@ router.get('/', validateQueryParams, async (req, res, next) => {
     next(error);
   }
 });
-
 
 //! DELETE a spot
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
