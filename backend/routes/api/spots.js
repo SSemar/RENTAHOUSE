@@ -398,52 +398,77 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
 
 
 //!-------------------SPOTS VALIDATE QUERY -------------------!
-//! validate test to see if work on postman
+//! Middleware for validating query parameters
 const validateQueryParams = [
-  query('page').optional().isInt({ min: 1 }).withMessage('Page must be greater than or equal to 1'),
-  query('size').optional().isInt({ min: 1, max: 20 }).withMessage('Size must be between 1 and 20'),
-  query('minLat').optional().isFloat().withMessage('Minimum latitude is invalid'),
-  query('maxLat').optional().isFloat().withMessage('Maximum latitude is invalid'),
-  query('minLng').optional().isFloat().withMessage('Minimum longitude is invalid'),
-  query('maxLng').optional().isFloat().withMessage('Maximum longitude is invalid'),
-  query('minPrice').optional().isFloat({ min: 0 }).withMessage('Minimum price must be greater than or equal to 0'),
-  query('maxPrice').optional().isFloat({ min: 0 }).withMessage('Maximum price must be greater than or equal to 0'),
-  handleValidationErrors
+  query('page')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Page must be greater than or equal to 1'),
+  query('size')
+    .optional()
+    .isInt({ min: 1, max: 20 })
+    .withMessage('Size must be between 1 and 20'),
+  query('minLat')
+    .optional()
+    .isFloat()
+    .withMessage('Minimum latitude is invalid'),
+  query('maxLat')
+    .optional()
+    .isFloat()
+    .withMessage('Maximum latitude is invalid'),
+  query('minLng')
+    .optional()
+    .isFloat()
+    .withMessage('Minimum longitude is invalid'),
+  query('maxLng')
+    .optional()
+    .isFloat()
+    .withMessage('Maximum longitude is invalid'),
+  query('minPrice')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Minimum price must be greater than or equal to 0'),
+  query('maxPrice')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Maximum price must be greater than or equal to 0'),
+  handleValidationErrors, // Custom middleware to handle validation errors
 ];
 
-//! GET all spots with query filters
+//! Route for getting spots with filters
 router.get('/', validateQueryParams, async (req, res, next) => {
   const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-  console.log(`Query parameters: page=${page}, size=${size}, minLat=${minLat}, maxLat=${maxLat}, minLng=${minLng}, maxLng=${maxLng}, minPrice=${minPrice}, maxPrice=${maxPrice}`);
-
+  //! Prepare the `where` clause for Sequelize
   const where = {};
-  if (minLat) where.lat = { [Op.gte]: minLat };
-  if (maxLat) where.lat = { ...where.lat, [Op.lte]: maxLat };
-  if (minLng) where.lng = { [Op.gte]: minLng };
-  if (maxLng) where.lng = { ...where.lng, [Op.lte]: maxLng };
-  if (minPrice) where.price = { [Op.gte]: minPrice };
-  if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
+  if (minLat !== undefined) where.lat = { [Op.gte]: parseFloat(minLat) };
+  if (maxLat !== undefined) where.lat = { ...where.lat, [Op.lte]: parseFloat(maxLat) };
+  if (minLng !== undefined) where.lng = { [Op.gte]: parseFloat(minLng) };
+  if (maxLng !== undefined) where.lng = { ...where.lng, [Op.lte]: parseFloat(maxLng) };
+  if (minPrice !== undefined) where.price = { [Op.gte]: parseFloat(minPrice) };
+  if (maxPrice !== undefined) where.price = { ...where.price, [Op.lte]: parseFloat(maxPrice) };
 
   try {
+    // Fetch spots with pagination and query filters
     const spots = await Spot.findAll({
       where,
-      limit: size,
-      offset: (page - 1) * size,
+      limit: parseInt(size),
+      offset: (parseInt(page) - 1) * parseInt(size),
       include: [
         {
           model: SpotImage,
           attributes: ['url'],
           where: { preview: true },
-          required: false
+          required: false,
         },
         {
           model: Review,
-          attributes: ['stars']
-        }
-      ]
+          attributes: ['stars'],
+        },
+      ],
     });
 
+    //! Format the spots response
     const spotsInfo = spots.map(spot => {
       const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
       const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
@@ -461,15 +486,19 @@ router.get('/', validateQueryParams, async (req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: parseFloat(spot.price),
-        createdAt: moment(spot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-        updatedAt: moment(spot.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        createdAt: spot.createdAt.toISOString(),
+        updatedAt: spot.updatedAt.toISOString(),
         avgRating,
-        previewImage
+        previewImage,
       };
     });
 
-    console.log(`Returning ${spotsInfo.length} spots with page ${page} and size ${size}`);
-    return res.status(200).json({ Spots: spotsInfo, page: parseInt(page), size: parseInt(size) });
+    // Respond with spots and pagination data
+    return res.status(200).json({
+      Spots: spotsInfo,
+      page: parseInt(page),
+      size: parseInt(size),
+    });
   } catch (error) {
     console.error(error);
     next(error);
