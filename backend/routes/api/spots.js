@@ -432,14 +432,14 @@ const validateQueryParams = [
     .optional()
     .isFloat({ min: 0 })
     .withMessage('Maximum price must be greater than or equal to 0'),
-  handleValidationErrors, // Custom middleware to handle validation errors
+  handleValidationErrors,
 ];
 
 //! Route for getting spots with filters
 router.get('/', validateQueryParams, async (req, res, next) => {
   const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-  //! Prepare the `where` clause for Sequelize
+  // Build where clause for Sequelize
   const where = {};
   if (minLat !== undefined) where.lat = { [Op.gte]: parseFloat(minLat) };
   if (maxLat !== undefined) where.lat = { ...where.lat, [Op.lte]: parseFloat(maxLat) };
@@ -449,7 +449,6 @@ router.get('/', validateQueryParams, async (req, res, next) => {
   if (maxPrice !== undefined) where.price = { ...where.price, [Op.lte]: parseFloat(maxPrice) };
 
   try {
-    // Fetch spots with pagination and query filters
     const spots = await Spot.findAll({
       where,
       limit: parseInt(size),
@@ -468,7 +467,7 @@ router.get('/', validateQueryParams, async (req, res, next) => {
       ],
     });
 
-    //! Format the spots response
+    // Format spots for response
     const spotsInfo = spots.map(spot => {
       const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
       const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
@@ -493,7 +492,6 @@ router.get('/', validateQueryParams, async (req, res, next) => {
       };
     });
 
-    // Respond with spots and pagination data
     return res.status(200).json({
       Spots: spotsInfo,
       page: parseInt(page),
