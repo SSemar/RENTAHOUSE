@@ -415,6 +415,9 @@ const validateQueryParams = [
 router.get('/', validateQueryParams, async (req, res, next) => {
   const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
+  console.log(`Query parameters: page=${page}, size=${size}, minLat=${minLat}, maxLat=${maxLat}, minLng=${minLng}, maxLng=${maxLng}, minPrice=${minPrice}, maxPrice=${maxPrice}`);
+
+
   const where = {};
   if (minLat) where.lat = { [Op.gte]: minLat };
   if (maxLat) where.lat = { ...where.lat, [Op.lte]: maxLat };
@@ -465,7 +468,7 @@ router.get('/', validateQueryParams, async (req, res, next) => {
         previewImage
       };
     });
-
+    console.log(`Returning ${spotsInfo.length} spots with page ${page} and size ${size}`);
     return res.status(200).json({ Spots: spotsInfo, page: parseInt(page), size: parseInt(size) });
   } catch (error) {
     next(error);
