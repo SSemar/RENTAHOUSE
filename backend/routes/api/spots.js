@@ -395,41 +395,6 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
   }
 });
 
-//! DELETE a spot
-router.delete('/:spotId', requireAuth, async (req, res, next) => {
-  const spotId = parseInt(req.params.spotId, 10);
-  //! check if spotId is a valid integer
-  if (isNaN(spotId)) {
-    const err = new Error('Validation error');
-    err.status = 400;
-    err.errors = { id: '":spotId" is not a valid integer' };
-    return next(err);
-  }
-
-  try {
-    const spot = await Spot.findByPk(spotId);
-
-    if (!spot) {
-      return res.status(404).json({
-        message: "Spot couldn't be found"
-      });
-    }
-
-    if (spot.ownerId !== req.user.id) {
-      return res.status(403).json({
-        message: "Forbidden"
-      });
-    }
-
-    await spot.destroy();
-
-    return res.status(200).json({
-      message: "Successfully deleted"
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
 
 //!-------------------SPOTS VALIDATE QUERY -------------------!
@@ -503,6 +468,43 @@ router.get('/', validateQueryParams, async (req, res, next) => {
     });
 
     return res.status(200).json({ Spots: spotsInfo, page: parseInt(page), size: parseInt(size) });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+//! DELETE a spot
+router.delete('/:spotId', requireAuth, async (req, res, next) => {
+  const spotId = parseInt(req.params.spotId, 10);
+  //! check if spotId is a valid integer
+  if (isNaN(spotId)) {
+    const err = new Error('Validation error');
+    err.status = 400;
+    err.errors = { id: '":spotId" is not a valid integer' };
+    return next(err);
+  }
+
+  try {
+    const spot = await Spot.findByPk(spotId);
+
+    if (!spot) {
+      return res.status(404).json({
+        message: "Spot couldn't be found"
+      });
+    }
+
+    if (spot.ownerId !== req.user.id) {
+      return res.status(403).json({
+        message: "Forbidden"
+      });
+    }
+
+    await spot.destroy();
+
+    return res.status(200).json({
+      message: "Successfully deleted"
+    });
   } catch (error) {
     next(error);
   }
