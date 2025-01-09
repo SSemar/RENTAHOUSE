@@ -446,11 +446,10 @@ const validateQueryParams = [
   handleValidationErrors
 ];
 
-
 //! GET all spots with query filters
 router.get('/', validateQueryParams, async (req, res, next) => {
   const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
-  // where object to store query filters
+
   const where = {};
   if (minLat) where.lat = { [Op.gte]: minLat };
   if (maxLat) where.lat = { ...where.lat, [Op.lte]: maxLat };
@@ -460,9 +459,7 @@ router.get('/', validateQueryParams, async (req, res, next) => {
   if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
 
   try {
-    // Fetch paginated spots with filters
     const spots = await Spot.findAll({
-      //call where object, and pagination//! look at pagination limit offset
       where,
       limit: size,
       offset: (page - 1) * size,
@@ -479,16 +476,12 @@ router.get('/', validateQueryParams, async (req, res, next) => {
         }
       ]
     });
-    // spots.map format data
+
     const spotsInfo = spots.map(spot => {
-      // Calculate average rating for each spot
-     
       const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
-      //quick avg rating
       const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
-      // Get the first image as the preview image
       const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url : null;
-      // Return formatted spot data //! Make sure it returns right data value(Num,str)
+
       return {
         id: spot.id,
         ownerId: spot.ownerId,
@@ -507,7 +500,7 @@ router.get('/', validateQueryParams, async (req, res, next) => {
         previewImage
       };
     });
-    // Return paginated spots
+
     return res.status(200).json({ Spots: spotsInfo, page: parseInt(page), size: parseInt(size) });
   } catch (error) {
     next(error);
