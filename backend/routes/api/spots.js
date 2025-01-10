@@ -416,11 +416,10 @@ const validateQueryParams = [
 router.get('/', validateQueryParams, async (req, res, next) => {
   const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-  console.log(`Query parameters: page=${page}, size=${size}, minLat=${minLat}, maxLat=${maxLat}, minLng=${minLng}, maxLng=${maxLng}, minPrice=${minPrice}, maxPrice=${maxPrice}`);
+  console.log('Query Parameters:', { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice });
 
-  // Parse and validate query parameters
-  const parsedPage = parseInt(page, 10) || 1;
-  const parsedSize = parseInt(size, 10) || 20;
+  const parsedPage = parseInt(page, 10);
+  const parsedSize = parseInt(size, 10);
 
   const where = {};
   if (minLat !== undefined) where.lat = { [Op.gte]: parseFloat(minLat) };
@@ -430,7 +429,7 @@ router.get('/', validateQueryParams, async (req, res, next) => {
   if (minPrice !== undefined) where.price = { [Op.gte]: parseFloat(minPrice) };
   if (maxPrice !== undefined) where.price = { ...where.price, [Op.lte]: parseFloat(maxPrice) };
 
-  console.log('Constructed WHERE clause:', where);
+  console.log('Constructed WHERE Clause:', where);
 
   try {
     const spots = await Spot.findAll({
@@ -475,13 +474,20 @@ router.get('/', validateQueryParams, async (req, res, next) => {
       };
     });
 
-    console.log(`Returning ${spotsInfo.length} spots with page ${parsedPage} and size ${parsedSize}`);
-    return res.status(200).json({ Spots: spotsInfo, page: parsedPage, size: parsedSize });
+    return res.status(200).json({
+      Spots: spotsInfo,
+      page: parsedPage,
+      size: parsedSize
+    });
   } catch (error) {
     console.error('Error in GET /api/spots:', error);
     next(error);
   }
 });
+
+
+
+
 //! DELETE a spot
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
   const spotId = parseInt(req.params.spotId, 10);
