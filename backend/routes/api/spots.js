@@ -413,28 +413,25 @@ const validateQueryParams = [
 ];
 
 //! Route for getting spots with filters
+//! GET all spots with query filters
 router.get('/', validateQueryParams, async (req, res, next) => {
   const { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-  console.log('Query Parameters:', { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice });
-
-  const parsedPage = parseInt(page, 10);
-  const parsedSize = parseInt(size, 10);
+  console.log(`Query parameters: page=${page}, size=${size}, minLat=${minLat}, maxLat=${maxLat}, minLng=${minLng}, maxLng=${maxLng}, minPrice=${minPrice}, maxPrice=${maxPrice}`);
 
   const where = {};
-  if (minLat !== undefined) where.lat = { minLat: parseFloat(minLat) };
-  if (maxLat !== undefined) where.lat = { ...where.lat, maxLat: parseFloat(maxLat) };
-  if (minLng !== undefined) where.lng = { minLng: parseFloat(minLng) };
-  if (maxLng !== undefined) where.lng = { ...where.lng, maxLng: parseFloat(maxLng) };
-  if (minPrice !== undefined) where.price = { minPrice: parseFloat(minPrice) };
-  if (maxPrice !== undefined) where.price = { ...where.price, maxPrice: parseFloat(maxPrice) };
-  console.log('Constructed WHERE Clause:', where);
+  if (minLat) where.lat = { [Op.gte]: minLat };
+  if (maxLat) where.lat = { ...where.lat, [Op.lte]: maxLat };
+  if (minLng) where.lng = { [Op.gte]: minLng };
+  if (maxLng) where.lng = { ...where.lng, [Op.lte]: maxLng };
+  if (minPrice) where.price = { [Op.gte]: minPrice };
+  if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
 
   try {
     const spots = await Spot.findAll({
       where,
-      limit: parsedSize,
-      offset: (parsedPage - 1) * parsedSize,
+      limit: size,
+      offset: (page - 1) * size,
       include: [
         {
           model: SpotImage,
@@ -473,13 +470,14 @@ router.get('/', validateQueryParams, async (req, res, next) => {
       };
     });
 
-    console.log(`Returning ${spotsInfo.length} spots with page ${parsedPage} and size ${parsedSize}`);
-    return res.status(200).json({ Spots: spotsInfo, page: parsedPage, size: parsedSize });
+    console.log(`Returning ${spotsInfo.length} spots with page ${page} and size ${size}`);
+    return res.status(200).json({ Spots: spotsInfo, page: parseInt(page), size: parseInt(size) });
   } catch (error) {
-    console.error('Error in GET /api/spots:', error);
+    console.error(error);
     next(error);
   }
 });
+
 
 
 //! DELETE a spot
