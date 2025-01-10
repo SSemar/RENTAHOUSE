@@ -422,13 +422,12 @@ router.get('/', validateQueryParams, async (req, res, next) => {
   const parsedSize = parseInt(size, 10);
 
   const where = {};
-  if (minLat !== undefined) where.lat = { [Op.gte]: parseFloat(minLat) };
-  if (maxLat !== undefined) where.lat = { ...where.lat, [Op.lte]: parseFloat(maxLat) };
-  if (minLng !== undefined) where.lng = { [Op.gte]: parseFloat(minLng) };
-  if (maxLng !== undefined) where.lng = { ...where.lng, [Op.lte]: parseFloat(maxLng) };
-  if (minPrice !== undefined) where.price = { [Op.gte]: parseFloat(minPrice) };
-  if (maxPrice !== undefined) where.price = { ...where.price, [Op.lte]: parseFloat(maxPrice) };
-
+  if (minLat !== undefined) where.lat = { minLat: parseFloat(minLat) };
+  if (maxLat !== undefined) where.lat = { ...where.lat, maxLat: parseFloat(maxLat) };
+  if (minLng !== undefined) where.lng = { minLng: parseFloat(minLng) };
+  if (maxLng !== undefined) where.lng = { ...where.lng, maxLng: parseFloat(maxLng) };
+  if (minPrice !== undefined) where.price = { minPrice: parseFloat(minPrice) };
+  if (maxPrice !== undefined) where.price = { ...where.price, maxPrice: parseFloat(maxPrice) };
   console.log('Constructed WHERE Clause:', where);
 
   try {
@@ -467,25 +466,20 @@ router.get('/', validateQueryParams, async (req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: parseFloat(spot.price),
-        createdAt: spot.createdAt.toISOString(),
-        updatedAt: spot.updatedAt.toISOString(),
+        createdAt: moment(spot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment(spot.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
         avgRating,
         previewImage
       };
     });
 
-    return res.status(200).json({
-      Spots: spotsInfo,
-      page: parsedPage,
-      size: parsedSize
-    });
+    console.log(`Returning ${spotsInfo.length} spots with page ${parsedPage} and size ${parsedSize}`);
+    return res.status(200).json({ Spots: spotsInfo, page: parsedPage, size: parsedSize });
   } catch (error) {
     console.error('Error in GET /api/spots:', error);
     next(error);
   }
 });
-
-
 
 
 //! DELETE a spot
