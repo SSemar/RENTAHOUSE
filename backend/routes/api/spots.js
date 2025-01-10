@@ -399,7 +399,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
 
 //!-------------------SPOTS VALIDATE QUERY -------------------!
 //! Middleware for validating query parameters
-// Validation middleware for query parameters
+
 const validateQueryParams = [
   check('page').optional().isInt({ min: 1 }).withMessage('Page must be greater than or equal to 1'),
   check('size').optional().isInt({ min: 1, max: 20 }).withMessage('Size must be between 1 and 20'),
@@ -418,7 +418,10 @@ router.get('/', validateQueryParams, async (req, res, next) => {
 
   console.log(`Query parameters: page=${page}, size=${size}, minLat=${minLat}, maxLat=${maxLat}, minLng=${minLng}, maxLng=${maxLng}, minPrice=${minPrice}, maxPrice=${maxPrice}`);
 
-  // Build where clause for Sequelize
+  // Parse and validate query parameters
+  const parsedPage = parseInt(page, 10) || 1;
+  const parsedSize = parseInt(size, 10) || 20;
+
   const where = {};
   if (minLat !== undefined) where.lat = { [Op.gte]: parseFloat(minLat) };
   if (maxLat !== undefined) where.lat = { ...where.lat, [Op.lte]: parseFloat(maxLat) };
@@ -427,11 +430,13 @@ router.get('/', validateQueryParams, async (req, res, next) => {
   if (minPrice !== undefined) where.price = { [Op.gte]: parseFloat(minPrice) };
   if (maxPrice !== undefined) where.price = { ...where.price, [Op.lte]: parseFloat(maxPrice) };
 
+  console.log('Constructed WHERE clause:', where);
+
   try {
     const spots = await Spot.findAll({
       where,
-      limit: parseInt(size),
-      offset: (parseInt(page) - 1) * parseInt(size),
+      limit: parsedSize,
+      offset: (parsedPage - 1) * parsedSize,
       include: [
         {
           model: SpotImage,
@@ -463,21 +468,20 @@ router.get('/', validateQueryParams, async (req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: parseFloat(spot.price),
-        createdAt: moment(spot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-        updatedAt: moment(spot.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        createdAt: spot.createdAt.toISOString(),
+        updatedAt: spot.updatedAt.toISOString(),
         avgRating,
         previewImage
       };
     });
 
-    console.log(`Returning ${spotsInfo.length} spots with page ${page} and size ${size}`);
-    return res.status(200).json({ Spots: spotsInfo, page: parseInt(page), size: parseInt(size) });
+    console.log(`Returning ${spotsInfo.length} spots with page ${parsedPage} and size ${parsedSize}`);
+    return res.status(200).json({ Spots: spotsInfo, page: parsedPage, size: parsedSize });
   } catch (error) {
-    console.error(error);
+    console.error('Error in GET /api/spots:', error);
     next(error);
   }
 });
-
 //! DELETE a spot
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
   const spotId = parseInt(req.params.spotId, 10);
