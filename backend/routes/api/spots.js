@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models'); 
 
-const { check, query, validationResult } = require('express-validator');
+const { check,  validationResult } = require('express-validator');
 const { requireAuth } = require('../../utils/auth');
 const { Op } = require('sequelize');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -399,40 +399,17 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
 
 //!-------------------SPOTS VALIDATE QUERY -------------------!
 //! Middleware for validating query parameters
+// Validation middleware for query parameters
 const validateQueryParams = [
-  query('page')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Page must be greater than or equal to 1'),
-  query('size')
-    .optional()
-    .isInt({ min: 1, max: 20 })
-    .withMessage('Size must be between 1 and 20'),
-  query('minLat')
-    .optional()
-    .isFloat()
-    .withMessage('Minimum latitude is invalid'),
-  query('maxLat')
-    .optional()
-    .isFloat()
-    .withMessage('Maximum latitude is invalid'),
-  query('minLng')
-    .optional()
-    .isFloat()
-    .withMessage('Minimum longitude is invalid'),
-  query('maxLng')
-    .optional()
-    .isFloat()
-    .withMessage('Maximum longitude is invalid'),
-  query('minPrice')
-    .optional()
-    .isFloat({ min: 0 })
-    .withMessage('Minimum price must be greater than or equal to 0'),
-  query('maxPrice')
-    .optional()
-    .isFloat({ min: 0 })
-    .withMessage('Maximum price must be greater than or equal to 0'),
-  handleValidationErrors,
+  check('page').optional().isInt({ min: 1 }).withMessage('Page must be greater than or equal to 1'),
+  check('size').optional().isInt({ min: 1, max: 20 }).withMessage('Size must be between 1 and 20'),
+  check('minLat').optional().isFloat().withMessage('Minimum latitude is invalid'),
+  check('maxLat').optional().isFloat().withMessage('Maximum latitude is invalid'),
+  check('minLng').optional().isFloat().withMessage('Minimum longitude is invalid'),
+  check('maxLng').optional().isFloat().withMessage('Maximum longitude is invalid'),
+  check('minPrice').optional().isFloat({ min: 0 }).withMessage('Minimum price must be greater than or equal to 0'),
+  check('maxPrice').optional().isFloat({ min: 0 }).withMessage('Maximum price must be greater than or equal to 0'),
+  handleValidationErrors
 ];
 
 //! Route for getting spots with filters
