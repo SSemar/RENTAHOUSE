@@ -441,7 +441,6 @@ router.get('/', validateQueryParams, async (req, res, next) => {
 
   console.log(`Query parameters: page=${page}, size=${size}, minLat=${minLat}, maxLat=${maxLat}, minLng=${minLng}, maxLng=${maxLng}, minPrice=${minPrice}, maxPrice=${maxPrice}`);
 
-
   // Build where clause for Sequelize
   const where = {};
   if (minLat !== undefined) where.lat = { [Op.gte]: parseFloat(minLat) };
@@ -461,16 +460,15 @@ router.get('/', validateQueryParams, async (req, res, next) => {
           model: SpotImage,
           attributes: ['url'],
           where: { preview: true },
-          required: false,
+          required: false
         },
         {
           model: Review,
-          attributes: ['stars'],
-        },
-      ],
+          attributes: ['stars']
+        }
+      ]
     });
 
-    // Format spots for response
     const spotsInfo = spots.map(spot => {
       const totalStars = spot.Reviews.reduce((acc, review) => acc + review.stars, 0);
       const avgRating = spot.Reviews.length > 0 ? totalStars / spot.Reviews.length : null;
@@ -488,18 +486,15 @@ router.get('/', validateQueryParams, async (req, res, next) => {
         name: spot.name,
         description: spot.description,
         price: parseFloat(spot.price),
-        createdAt: spot.createdAt.toISOString(),
-        updatedAt: spot.updatedAt.toISOString(),
+        createdAt: moment(spot.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment(spot.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
         avgRating,
-        previewImage,
+        previewImage
       };
     });
+
     console.log(`Returning ${spotsInfo.length} spots with page ${page} and size ${size}`);
-    return res.status(200).json({
-      Spots: spotsInfo,
-      page: parseInt(page),
-      size: parseInt(size),
-    });
+    return res.status(200).json({ Spots: spotsInfo, page: parseInt(page), size: parseInt(size) });
   } catch (error) {
     console.error(error);
     next(error);
