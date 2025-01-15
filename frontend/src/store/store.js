@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 
 
 const rootReducer = combineReducers({
-
+    //reducers go here
 });
 
 let enhancer;
@@ -25,4 +25,4 @@ const configureStore = (preloadedState) => {
   };
 
 
-  export default configureStore;
+export default configureStore;
