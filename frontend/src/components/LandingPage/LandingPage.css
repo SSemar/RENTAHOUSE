@@ -1,0 +1,47 @@
+[hidden] {
+  display: none;
+}
+
+.landing-page-spot-card-div {
+  margin-top: 1rem;
+  border-radius: 0.75rem;
+}
+
+.landing-page-spot-card-div:hover {
+  cursor: pointer;
+}
+
+.landing-page-spot-card-fa-star {
+  font-size: 0.75rem;
+  vertical-align: -0.05rem;
+}
+
+.landing-page-spot-card-line-1 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.landing-page-spot-card-link {
+  text-decoration: none;
+}
+
+.landing-page-spot-card-location {
+  font-weight: bold;
+}
+
+.landing-page-spot-card-preview-image {
+  display: block;
+  width: 250px;
+  height: 250px;
+  margin-bottom: 0.5rem;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.landing-page-spots-main {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 65.5rem;
+  gap: 1rem;
+}
