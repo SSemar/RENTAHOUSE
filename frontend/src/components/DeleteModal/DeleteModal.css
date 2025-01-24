@@ -1,0 +1,46 @@
+.delete-item-modal-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .delete-item-modal-h1 {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .delete-item-modal-main {
+    width: 25rem;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .delete-item-modal-no-button {
+    background-color: #dddddd;
+    margin-top: 1rem;
+  }
+  
+  .delete-item-modal-no-button,
+  .delete-item-modal-yes-button {
+    font-size: 1rem;
+    font-weight: bold;
+    height: max-content;
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    align-self: center;
+  }
+  
+  .delete-item-modal-text {
+    margin: 1rem 0;
+  }
+  
+  .delete-item-modal-yes-button {
+    color: white;
+    background-color: #dd0000;
+  }

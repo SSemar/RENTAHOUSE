@@ -1,0 +1,112 @@
+.new-spot-error {
+    margin: 0;
+  }
+  
+  .new-spot-error,
+  .new-spot-error-inline {
+    color: red;
+    text-align: left;
+  }
+  
+  .new-spot-error-inline {
+    margin: 0 0 0 0.15rem;
+  }
+  
+  .new-spot-form {
+    max-width: 500px;
+  }
+  
+  .new-spot-form-section {
+    padding-bottom: 1rem;
+    border-bottom: 1px #dddddd solid;
+  }
+  
+  .new-spot-input,
+  .new-spot-input-image {
+    width: 100%;
+  }
+  
+  .new-spot-input::-webkit-inner-spin-button,
+  .new-spot-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+  
+  .new-spot-input-inline {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+  }
+  
+  .new-spot-input-inline .new-spot-input {
+    flex-shrink: 1;
+  }
+  
+  .new-spot-input-inline-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: flex-end;
+  }
+  
+  .new-spot-label {
+    margin-top: 1rem;
+  }
+  
+  .new-spot-label,
+  .new-spot-label-image {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .new-spot-label.no-label {
+    margin: 0;
+  }
+  
+  .new-spot-label-image {
+    margin-top: 0.5rem;
+  }
+  
+  .new-spot-h1,
+  .new-spot-h2 {
+    margin: 1rem 0 0 0;
+  }
+  
+  .new-spot-p {
+    margin: 0.5rem 0;
+  }
+  
+  .new-spot-main {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .new-spot-submit-button {
+    color: white;
+    background-color: #83aaff;
+    font-weight: bold;
+    margin: 1rem 0 2rem 0;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 0.25rem;
+  }
+  
+  .new-spot-submit-button:disabled {
+    opacity: 0.5;
+  }
+  
+  .new-spot-submit-button:disabled:hover {
+    cursor: default;
+  }
+  
+  .new-spot-submit-button:hover {
+    cursor: pointer;
+  }
+  
+  .new-spot-submit-button-div {
+    text-align: center;
+  }
+  
+  textarea.new-spot-input {
+    font: inherit;
+    height: 10rem;
+    resize: vertical;
+  }

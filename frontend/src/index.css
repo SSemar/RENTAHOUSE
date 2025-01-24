@@ -1,1 +1,26 @@
-/* TODO: Add sitewide styles */
+a {
+    color: #222222;
+  }
+  
+  a:hover {
+    cursor: pointer;
+  }
+  
+  html {
+    font-size: 1rem;
+    color: #222222;
+  }
+  
+  main {
+    margin: 0 90px;
+  }
+  
+  .return-home-button {
+    display: block;
+    color: white;
+    background-color: #83aaff;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+  }

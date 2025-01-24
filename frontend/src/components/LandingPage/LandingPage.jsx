@@ -1,7 +1,8 @@
-// frontend/src/components/LandingPage/LandingPage.jsx
+
+
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import LandingPageSpotCard from './LandingSpot';
+import LandingSpot from './LandingSpot';
 import * as spotsActions from '../../store/spots';
 import './LandingPage.css';
 
@@ -16,14 +17,14 @@ const LandingPage = () => {
   if (!spots)
     return (
       <main className="spot-details-main">
-        <h1 className="spot-details-header">Loading page...</h1>
+        <h1 className="spot-details-header">No Spots Loaded...</h1>
       </main>
     );
 
   return (
     <>
       <main className="landing-page-spots-main">
-        {spots.map(spot => LandingPageSpotCard(spot))}
+        {spots.map(spot => ( LandingSpot(spot) ))}
       </main>
     </>
   );

@@ -1,8 +1,8 @@
-// frontend/src/components/LandingPage/LandingPageSpotCard.jsx
-import { NavLink } from 'react-router-dom';
-import { FaStar } from 'react-icons/fa6';
 
-const LandingPageSpotCard = spot => {
+import { NavLink } from 'react-router-dom';
+import { FaRegStar } from "react-icons/fa";
+
+const LandingSpot = spot => {
   const spotAvgRating = spot.avgRating ? spot.avgRating.toFixed(2) : 'New';
   const previewImage = spot.previewImage;
 
@@ -24,16 +24,16 @@ const LandingPageSpotCard = spot => {
             {spot.city}, {spot.state}
           </span>
           <span className="landing-page-spot-card-average-rating">
-            <FaStar className="landing-page-spot-card-fa-star" />
+            <FaRegStar className="landing-page-spot-card-fa-reg-star" />
             &nbsp;{spotAvgRating}
           </span>
         </div>
         <div className="landing-page-spot-card-line-2">
-          <b>${spot.price.toLocaleString()}</b> night
+          <b>${spot.price.toLocaleString()}</b> Per Night
         </div>
       </div>
     </NavLink>
   );
 };
 
-export default LandingPageSpotCard;
+export default LandingSpot;

@@ -1,20 +1,23 @@
-// frontend/src/components/Navigation/Navigation.jsx
 
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import AirbnbLogo from '../../images/AirbnbLogo.png';
 import './Navigation.css';
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
   
+  const { width } = useWindowDimensions();
+
 
   return (
     <ul className="nav-container">
       <li className="home-button">
         <NavLink to="/">
           <img
-           src = "airbnb-logo.png"
+           src={width < 1128 ? AirbnbLogo : 'airbnb-logoLarge'}
            className='airbnb-logo'
           />
         </NavLink>

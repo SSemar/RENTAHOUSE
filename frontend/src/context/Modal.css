@@ -7,7 +7,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(3, 3, 3, 0.7);
   z-index: 1000;
 }
 
@@ -22,11 +22,11 @@
 
 #modal-content {
   position: relative;
-  top: 100px;
+  top: 10px;
   background-color: white;
   border-radius: 10px;
   padding: 20px;
-  width: 400px;
+  width: 550px;
   max-width: 90%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
@@ -45,7 +45,7 @@
 
 #modal-content input[type="text"],
 #modal-content input[type="password"] {
-  background-color: #e0f7fa;
+  background-color: #c5caea;
   border: 3px solid black;
   padding: 10px;
   font-size: 16px;
@@ -76,7 +76,7 @@
 }
 
 #modal-content a {
-  color: #00525E;
+  color: #5e0009;
   text-decoration: none;
   cursor: pointer;
 }

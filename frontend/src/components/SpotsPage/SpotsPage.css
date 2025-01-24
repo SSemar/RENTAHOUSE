@@ -1,0 +1,115 @@
+.create-spot-button {
+    margin-bottom: 1rem;
+    padding: 0.25rem 0.75rem;
+  }
+  
+  .create-spot-button,
+  .create-spot-button-no-spots,
+  .delete-spot-button .modal-button,
+  .update-spot-button {
+    color: white;
+    background-color: #83aaff;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    border-radius: 0.25rem;
+  }
+  
+  .create-spot-button-no-spots {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .delete-spot-button {
+    padding: 0;
+    border: none;
+  }
+  
+  .delete-spot-button .modal-button,
+  .update-spot-button {
+    width: 4.5rem;
+    padding-bottom: 0.25rem;
+    padding-top: 0.25rem;
+  }
+  
+  .update-spot-button {
+    color: white;
+    display: inline-block;
+    text-align: center;
+    font-family: arial;
+    font-size: 0.8rem;
+    text-decoration: none;
+  }
+  
+  [hidden] {
+    display: none;
+  }
+  
+  .spots-page-h1 {
+    margin: 1rem 0 0.5rem 0;
+  }
+  
+  .spots-page-spot-card-div {
+    margin-top: 1rem;
+    border-radius: 0.75rem;
+  }
+  
+  .spots-page-spot-card-div:hover {
+    cursor: pointer;
+  }
+  
+  .spots-page-spot-card-fa-star {
+    font-size: 0.75rem;
+    vertical-align: -0.05rem;
+  }
+  
+  .spots-page-spot-card-line-1,
+  .spots-pate-spot-card-line-3 {
+    display: flex;
+  }
+  
+  .spots-page-spot-card-line-1 {
+    justify-content: space-between;
+  }
+  
+  .spots-page-spot-card-line-3 {
+    margin-top: 1rem;
+  }
+  
+  .spots-page-spot-card-link {
+    text-decoration: none;
+  }
+  
+  .spots-page-spot-card-location {
+    font-weight: bold;
+  }
+  
+  .spots-page-spot-card-preview-image {
+    display: block;
+    width: 250px;
+    height: 250px;
+    margin-bottom: 0.5rem;
+    border-radius: 0.75rem;
+    object-fit: cover;
+    overflow: hidden;
+  }
+  
+  .spots-page-spots {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 65.5rem;
+    gap: 1rem;
+  }
+  
+  .spots-page-tagline {
+    color: #6a6a6a;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  .spots-page-tagline-text {
+    margin: 1rem 0;
+  }
+  
+  .update-spot-button {
+    margin-right: 0.5rem;
+  }

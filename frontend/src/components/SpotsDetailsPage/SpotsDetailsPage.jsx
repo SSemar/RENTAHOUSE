@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa6';
-import SpotReview from './SpotReview';
+import SpotReview from './SpotReview.jsx';
 import OpenModalButton from '../OpenModalButton';
 import ReviewFormModal from '../ReviewFormModal';
 import * as spotsActions from '../../store/spots';
-import './SpotDetailsPage.css';
+import './SpotsDetailsPage.css';
 
 const SpotDetailsPage = () => {
   const dispatch = useDispatch();
@@ -109,6 +109,7 @@ const SpotDetailsPage = () => {
               ${spot.price.toLocaleString()} night
             </span>
             <span className="spot-details-average-rating">
+            
               <FaStar className="fa-star" />
               <span> {spotAvgRating}</span>
               <span hidden={!spot.avgStarRating}>
@@ -123,17 +124,18 @@ const SpotDetailsPage = () => {
             onClick={() => alert('Feature Coming Soon...')}
             className="spot-details-reserve-button"
           >
-            Reserve
+            Reserve Spot
           </button>
         </div>
         <div className="bottom-spot-details">
           <h2 className="spot-details-host">
-            Hosted by {spot.Owner.firstName} {spot.Owner.lastName}
+            Owned by {spot.Owner.firstName} {spot.Owner.lastName}
           </h2>
           <p className="spot-details-description">{spot.description}</p>
         </div>
         <div className="spot-details-reviews">
           <h2 className="spot-details-reviews-header">
+            
             <FaStar className="fa-star-header" />
             <span> {spotAvgRating}</span>
             <span hidden={!spot.avgStarRating}>

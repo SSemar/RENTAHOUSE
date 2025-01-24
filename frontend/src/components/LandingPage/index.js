@@ -1,3 +1,4 @@
-import LandingPage from "./LandingSpotPage";
+import LandingPage from './LandingPage';
 
-export default LoginFormPage;
+
+export default LandingPage;

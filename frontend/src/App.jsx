@@ -3,30 +3,25 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-//import SignupFormModal from './components/SignupFormModal/SignupFormModal';
 import Navigation from './components/Navigation/Navigation';
-//import Greeting from './components/OpenModalButton/Greeting';
-//import LoginFormModal from './components/LoginFormModal/LoginFormModal';
-import LandingPage from './components/LandingPage/LandingPage';
 import LandingPage from './components/LandingPage';
-import SpotDetailsPage from './components/SpotDetailsPage';
+import SpotDetailsPage from './components/SpotsDetailsPage';
 import UpdateSpotPage from './components/UpdateSpotPage';
-import NewSpotPage from './components/NewSpotPage';
-import SpotsPage from './components/ManageSpotsPage';
+import NewSpot from './components/NewSpot';
+import SpotsPage from './components/SpotsPage';
 import * as sessionActions from './store/session';
+//import SignupFormModal from './components/SignupFormModal/SignupFormModal';
+//import LoginFormModal from './components/LoginFormModal/LoginFormModal';
 
 
 
-
-
-
-function Layout() {
+const Layout = () => {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
-      setIsLoaded(true)
+      setIsLoaded(true);
     });
   }, [dispatch]);
 
@@ -59,7 +54,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'new',
-            element: <NewSpotPage />,
+            element: <NewSpot />,
           },
           {
             path: 'current',
@@ -72,7 +67,12 @@ const router = createBrowserRouter([
         element: (
           <main>
             <h1>Page Not Found</h1>
-            {}
+            {/* <button
+              onClick={() => navigate('/')}
+              className="return-home-button"
+            >
+              Return to Home Page
+            </button> */}
           </main>
         ),
       },

@@ -1,0 +1,123 @@
+.review-button {
+    color: white;
+    background-color: #83aaff;
+    font-size: 1rem;
+    font-weight: bold;
+    height: max-content;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    align-self: center;
+  }
+  
+  .review-button:disabled {
+    opacity: 0.5;
+  }
+  
+  .review-button:disabled:hover {
+    cursor: default;
+  }
+  
+  .review-button:hover {
+    cursor: pointer;
+  }
+  
+  .review-error {
+    color: red;
+    text-align: left;
+    margin: 0;
+  }
+  
+  .review-error:first-of-type {
+    margin: 1rem 0 0 0;
+  }
+  
+  .review-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .review-form-main {
+    width: 30rem;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .review-h1 {
+    color: #83aaff;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .review-input {
+    box-sizing: border-box;
+    background-color: transparent;
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 0.1rem;
+    border: none;
+    outline: none;
+  }
+  
+  .review-input .empty {
+    color: #dddddd;
+  }
+  
+  .review-input .filled {
+    color: #83aaff;
+  }
+  
+  .review-label {
+    display: block;
+  }
+  
+  .review-label,
+  .review-label-stars {
+    text-align: left;
+    margin-top: -1px;
+    padding: 0.5rem;
+    border: 1px #222222 solid;
+  }
+  
+  .review-label:first-of-type {
+    margin-top: 1rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+  
+  .review-label-stars {
+    display: flex;
+    justify-content: center;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+  
+  .review-star {
+    font-size: 2rem;
+    height: 2rem;
+  }
+  
+  .review-stars {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .stars-text {
+    font-size: 1.5rem;
+    height: fit-content;
+    align-self: center;
+  }
+  
+  textarea.review-input {
+    font: inherit;
+    height: 10rem;
+    resize: none;
+  }
