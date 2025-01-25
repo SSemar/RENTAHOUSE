@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         path: '*',
         element: (
           <main>
-            <h1>Page Not Found</h1>
+            <h1>Page Not Found, Click Home to Leave. </h1>
             {/* <button
               onClick={() => navigate('/')}
               className="return-home-button"

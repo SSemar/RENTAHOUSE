@@ -24,6 +24,7 @@
   }
   
   .signup-error {
+    font-family: 'Courier New', Courier, monospace;
     color: red;
     text-align: left;
     margin: 0.25rem 0 0.75rem 0;
@@ -47,11 +48,13 @@
   
   .signup-h1 {
     color: #FF5A5F;
+    font-family: 'Courier New', Courier, monospace;
     width: 100%;
     margin: 0;
   }
   
   .signup-input {
+    font-family: 'Courier New', Courier, monospace;
     box-sizing: border-box;
     width: 100%;
     font-size: 1rem;
@@ -61,13 +64,14 @@
   }
   
   .signup-label {
+    font-family: 'Courier New', Courier, monospace;
     text-align: left;
-    color: #6a6a6a;
+    color: #000000;
     font-size: 0.9rem;
     display: block;
     margin-top: -1px;
     padding: 0.5rem;
-    border: 1px #FF5A5F dashed;
+    border: 2px #FF5A5F solid;
   }
   
   .signup-label:first-of-type {

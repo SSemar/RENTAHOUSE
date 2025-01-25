@@ -1,5 +1,4 @@
 
-
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
@@ -23,7 +22,6 @@ function LoginFormModal() {
       .then(closeModal)
       .catch(async res => {
         const data = await res.json();
-        // Equivalent to `if (data && data.errors) {`
         if (data?.errors) {
           setErrors(data.errors);
         }
@@ -33,7 +31,7 @@ function LoginFormModal() {
   const logInDemoUser = () => {
     return dispatch(
       sessionActions.login({
-        credential: 'DemoUser',
+        credential: 'Demo-lition',
         password: 'password',
       })
     ).then(closeModal);
