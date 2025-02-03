@@ -21,13 +21,23 @@ const LandingPage = () => {
       </main>
     );
 
-  return (
-    <>
-      <main className="landing-page-spots-main">
-        {spots.map(spot => ( LandingSpot(spot) ))}
-      </main>
-    </>
-  );
-};
+    return (
+      <>
+        <main className="landing-page-spots-main">
+          <div className="landing-page-spots-main-div">
+            {spots.map(spot => LandingSpot(spot))}
+          </div>
+        </main>
+      </>
+    );
+  };
+//   return (
+//     <>
+//       <main className="landing-page-spots-main">
+//         {spots.map(spot => ( LandingSpot(spot) ))}
+//       </main>
+//     </>
+//   );
+// };
 
 export default LandingPage;

@@ -1,4 +1,4 @@
-// frontend/src/components/SpotsPage/SpotsCard.jsx
+
 import { NavLink, Link } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa6';
 import OpenModalButton from '../OpenModalButton';

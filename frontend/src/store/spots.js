@@ -32,6 +32,7 @@ const updateReviews = reviews => {
     payload: reviews,
   };
 };
+
 //! RESET STORE
 export const clearStore = () => async dispatch => {
   dispatch(resetStore());
