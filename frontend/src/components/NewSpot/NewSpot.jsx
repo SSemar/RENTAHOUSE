@@ -165,12 +165,11 @@ const NewSpot = () => {
   return (
     <main className="new-spot-main">
       <form onSubmit={handleSubmit} className="new-spot-form">
-        <h1 className="new-spot-h1">Create a New Spot</h1>
+        <h1 className="new-spot-h1">Create a New Spot!</h1>
         <div className="new-spot-form-section">
-          <h2 className="new-spot-h2">Where&apos;s your place located?</h2>
+          <h2 className="new-spot-h2">Where&apos;s your listing located?</h2>
           <p className="new-spot-p">
-            Guests will only get your exact address once they have booked a
-            reservation.
+            Fill this form out to list your spot! You can always edit your spot!
           </p>
           <label className="new-spot-label">
             Country&nbsp;
@@ -262,10 +261,9 @@ const NewSpot = () => {
           </div>
         </div>
         <div className="new-spot-form-section">
-          <h2 className="new-spot-h2">Describe your place to guests</h2>
+          <h2 className="new-spot-h2">Description!</h2>
           <p className="new-spot-p">
-            Mention the best features of your space, any special amenities like
-            fast WiFi or parking, & what you love about the neighborhood.
+            Sell your spot! Highlight what makes your space unique, and share about the house! What makes it special?
           </p>
           <label className="new-spot-label no-label">
             <textarea
@@ -282,8 +280,7 @@ const NewSpot = () => {
         <div className="new-spot-form-section">
           <h2 className="new-spot-h2">Create a title for your spot</h2>
           <p className="new-spot-p">
-            Catch guests&apos; attention with a spot title that highlights what
-            makes your place special.
+            What will you name your spot? Make it catchy! 
           </p>
           <label className="new-spot-label no-label">
             <input
@@ -299,8 +296,7 @@ const NewSpot = () => {
         <div className="new-spot-form-section">
           <h2 className="new-spot-h2">Set a base price for your spot</h2>
           <p className="new-spot-p">
-            Competitive pricing can help your listing stand out & rank higher in
-            search results.
+            What will you charge per night? Please enter in USD.
           </p>
           <label className="new-spot-label no-label">
             <div className="new-spot-input-inline">
@@ -317,9 +313,9 @@ const NewSpot = () => {
           {errors.price && <p className="new-spot-error">{errors.price}</p>}
         </div>
         <div className="new-spot-form-section">
-          <h2 className="new-spot-h2">Liven up your spot with photos</h2>
+          <h2 className="new-spot-h2">Add images to your spots!</h2>
           <p className="new-spot-p">
-            Submit a link to at least one photo to publish your spot.
+            Share images of your spot! Show off your rooms/amenities!
           </p>
           <label className="new-spot-label no-label">
             <input

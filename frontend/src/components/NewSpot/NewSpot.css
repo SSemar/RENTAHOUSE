@@ -67,6 +67,8 @@
   
   .new-spot-h1,
   .new-spot-h2 {
+    font-family: 'Courier New', Courier, monospace;
+    color: #FF5A5F;
     margin: 1rem 0 0 0;
   }
   
