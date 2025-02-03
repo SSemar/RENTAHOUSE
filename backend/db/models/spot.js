@@ -5,9 +5,9 @@ module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
     static associate(models) {
       // define association here
-      Spot.hasMany(models.SpotImage, { foreignKey: 'spotId' });
-      Spot.hasMany(models.Review, { foreignKey: 'spotId' });
-      Spot.belongsTo(models.User, { foreignKey: 'ownerId', as: 'Owner' });
+      Spot.hasMany(models.SpotImage, { foreignKey: 'spotId', onDelete: 'CASCADE' });
+      Spot.hasMany(models.Review, { foreignKey: 'spotId', onDelete: 'CASCADE' });
+      Spot.belongsTo(models.User, { foreignKey: 'ownerId', as: 'Owner', onDelete: 'CASCADE' });
     }
 
     toJSON() {
@@ -24,47 +24,17 @@ module.exports = (sequelize, DataTypes) => {
 
   Spot.init(
     {
-      ownerId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      address: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      city: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      state: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      country: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lat: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-      },
-      lng: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      price: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-      },
-    },
+      ownerId: DataTypes.INTEGER,
+      address: DataTypes.STRING,
+      city: DataTypes.STRING,
+      state: DataTypes.STRING,
+      country: DataTypes.STRING,
+      lat: DataTypes.DECIMAL,
+      lng: DataTypes.DECIMAL,
+      name: DataTypes.STRING,
+      description: DataTypes.STRING,
+      price: DataTypes.DECIMAL,
+    },  
     {
       sequelize,
       modelName: 'Spot',

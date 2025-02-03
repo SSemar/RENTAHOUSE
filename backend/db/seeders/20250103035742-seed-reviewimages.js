@@ -13,21 +13,29 @@ module.exports = {
     await queryInterface.bulkInsert(options, [
       {
         reviewId: 1,
-        url: 'image url',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        url: 'https://picsum.photos/500?v=7',
+        
       },
       {
         reviewId: 2,
-        url: 'image url',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        url: 'https://picsum.photos/500?v=8',
+      },
+      {
+        reviewId: 3,
+        url: 'https://picsum.photos/500?v=9',
       }
     ], {});
   },
 
   async down(queryInterface, Sequelize) {
     options.tableName = 'ReviewImages';
-    await queryInterface.bulkDelete(options, null, {});
+    await queryInterface.bulkDelete(
+      options, 
+      {
+        reviewId: {
+          [Sequelize.Op.in]: [1, 2, 3],
+        },
+      }
+    );
   }
 };

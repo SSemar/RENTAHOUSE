@@ -12,8 +12,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     options.tableName = 'Spots';
     await queryInterface.bulkInsert(options, [
-      {
-        id: 1,
+      {      
         ownerId: 1,
         address: '123 Disney Lane',
         city: 'San Francisco',
@@ -21,17 +20,45 @@ module.exports = {
         country: 'United States of America',
         lat: 37.7645358,
         lng: -122.4730327,
-        name: 'App Academy',
-        description: 'Place where web developers are created',
+        name: 'Disneyland',
+        description: 'Lorem ipsum odor amet, consectetuer adipiscing elit. Elementum morbi tellus sem euismod vestibulum tempor scelerisque ad sapien. Efficitur vestibulum maximus massa curabitur libero quis congue.',
         price: 123,
-        createdAt: new Date(),
-        updatedAt: new Date()
+      },
+      {
+        ownerId: 2,
+        address: 'Test lane drive 1',
+        city: 'Dallas',
+        state: 'Texas',
+        country: 'United States of America',
+        lat: 77.7645358,
+        lng: 99.4730327,
+        name: 'Test Spot 1',
+        description: 'Lorem ipsum odor amet, consectetuer adipiscing elit. Elementum morbi tellus sem euismod vestibulum tempor scelerisque ad sapien. Efficitur vestibulum maximus massa curabitur libero quis congue.',
+        price: 5000,
+      },
+      {
+        ownerId: 2,
+        address: 'Test lane drive 2',
+        city: 'New York',
+        state: 'New York',
+        country: 'United States of America',
+        lat: 71.7645338,
+        lng: -99.4730327,
+        name: 'Test Spot 2',
+        description: 'Lorem ipsum odor amet, consectetuer adipiscing elit. Elementum morbi tellus sem euismod vestibulum tempor scelerisque ad sapien. Efficitur vestibulum maximus massa curabitur libero quis congue.',
+        price: 10000,
       }
     ], {});
   },
 
   async down(queryInterface, Sequelize) {
     options.tableName = 'Spots';
-    await queryInterface.bulkDelete(options, null, {});
+    await queryInterface.bulkDelete(options,
+      {
+        name: {
+          [Sequelize.Op.in]: ['Disneyland', 'Test Spot 1', 'Test Spot 2'],
+        },
+      },
+      {});
   }
 };

@@ -1,5 +1,8 @@
 'use strict';
 
+
+const { Review } = require('../models');
+
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA; 
@@ -13,26 +16,35 @@ module.exports = {
       options, 
       [
         {
+        userId: 2,
         spotId: 1,
-        userId: 1,
-        review: 'Great place!',
-        stars: 5,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        review: 'Great place! and BLAH BLAH BLAH BLAH BLAH BLAH BLAH ',
+        stars: 5, 
       },
       {
+        userId: 3,
         spotId: 1,
-        userId: 2,
-        review: 'Not bad.',
+        review: 'Not bad.and BLAH BLAH BLAH BLAH BLAH BLAH BLAH ',
         stars: 3,
-        createdAt: new Date(),
-        updatedAt: new Date()
+      },
+      {
+        userId: 2,
+        spotId: 2,
+        review: 'Not bad.and BLAH BLAH BLAH BLAH BLAH BLAH BLAH ',
+        stars: 2,
       }
     ], {});
   },
 
   async down(queryInterface, Sequelize) {
     options.tableName = 'Reviews'; 
-    await queryInterface.bulkDelete('Reviews', null, {});
+    await queryInterface.bulkDelete(
+      'options', 
+      {
+      userId: {
+        [Sequelize.Op.in]: [1, 2, 3],
+      },
+    }, 
+    {});
   }
 };

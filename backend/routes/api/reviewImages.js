@@ -1,41 +1,44 @@
+// backend/routes/api/review-images.js
 const express = require('express');
-const { ReviewImage, Review } = require('../../db/models');
-const { requireAuth } = require('../../utils/auth');
+
+const { requireAuth } = require('../../utils/auth.js');
+const { Review, ReviewImage } = require('../../db/models');
+
 const router = express.Router();
 
-// DELETE a Review Image
-router.delete('/:imageId', requireAuth, async (req, res, next) => {
-  const { imageId } = req.params;
-
-  console.log(`DELETE /review-images/${imageId} route hit`);
-
+// Delete a Review Image
+router.delete('/:imageId', requireAuth, async (req, res) => {
   try {
-    const reviewImage = await ReviewImage.findByPk(imageId, {
-      include: {
-        model: Review,
-        attributes: ['userId']
-      }
+    const reviewImage = await ReviewImage.findByPk(req.params.imageId, {
+      include: [
+        {
+          model: Review,
+        },
+      ],
     });
-
     if (!reviewImage) {
-      console.error("Review Image couldn't be found");
-      return res.status(404).json({
-        message: "Review Image couldn't be found"
-      });
+      throw new Error();
     }
 
-    if (reviewImage.Review.userId !== req.user.id) {
-      console.error("Forbidden");
-      return res.status(403).json({
-        message: "Forbidden"
-      });
-    }
+    const { user } = req;
+    if (user) {
+      try {
+        if (user.id !== reviewImage.Review.userId) {
+          throw new Error();
+        }
+      } catch (error) {
+        res.statusCode = 403;
+        return res.json({ message: 'Forbidden' });
+      }
 
-    await reviewImage.destroy();
-    return res.json({ message: 'Successfully deleted' });
+      await reviewImage.destroy();
+      return res.json({ message: 'Successfully deleted' });
+    } else {
+      return res.json({ user: null });
+    }
   } catch (error) {
-    console.error(error);
-    next(error);
+    res.statusCode = 404;
+    return res.json({ message: "Review Image couldn't be found" });
   }
 });
 
