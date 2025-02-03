@@ -100,8 +100,7 @@ const UpdateSpotPage = () => {
         <div className="update-spot-form-section">
           <h2 className="update-spot-h2">Where&apos;s your place located?</h2>
           <p className="update-spot-p">
-            Guests will only get your exact address once they have booked a
-            reservation.
+          Fill this form out to list your spot! You can always edit your spot!
           </p>
           <label className="update-spot-label">
             Country&nbsp;
@@ -193,10 +192,9 @@ const UpdateSpotPage = () => {
           </div>
         </div>
         <div className="update-spot-form-section">
-          <h2 className="update-spot-h2">Describe your place to guests</h2>
+          <h2 className="update-spot-h2">Description!</h2>
           <p className="update-spot-p">
-            Mention the best features of your space, any special amenities like
-            fast WiFi or parking, & what you love about the neighborhood.
+          Sell your spot! Highlight what makes your space unique, and share about the house! What makes it special?
           </p>
           <label className="update-spot-label no-label">
             <textarea
@@ -211,10 +209,9 @@ const UpdateSpotPage = () => {
           )}
         </div>
         <div className="update-spot-form-section">
-          <h2 className="update-spot-h2">Create a title for your spot</h2>
+          <h2 className="update-spot-h2">Create a name for your spot</h2>
           <p className="update-spot-p">
-            Catch guests&apos; attention with a spot title that highlights what
-            makes your place special.
+          What will you name your spot? Make it catchy! 
           </p>
           <label className="update-spot-label no-label">
             <input
@@ -228,10 +225,9 @@ const UpdateSpotPage = () => {
           {errors.name && <p className="update-spot-error">{errors.name}</p>}
         </div>
         <div className="update-spot-form-section">
-          <h2 className="update-spot-h2">Set a base price for your spot</h2>
+          <h2 className="update-spot-h2">Set your rate!</h2>
           <p className="update-spot-p">
-            Competitive pricing can help your listing stand out & rank higher in
-            search results.
+          What will you charge per night? Please enter in USD.
           </p>
           <label className="update-spot-label no-label">
             <div className="update-spot-input-inline">

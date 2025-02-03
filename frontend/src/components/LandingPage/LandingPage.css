@@ -16,7 +16,13 @@
   vertical-align: -0.05rem;
 }
 
+.landing-page-spot-card-line-2{
+  font-family: 'Courier New', Courier, monospace;
+  color: #FF5A5F;
+}
 .landing-page-spot-card-line-1 {
+  font-family: 'Courier New', Courier, monospace;
+  color: #FF5A5F;
   display: flex;
   justify-content: space-between;
 }
@@ -26,6 +32,7 @@
 }
 
 .landing-page-spot-card-location {
+  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
 }
 

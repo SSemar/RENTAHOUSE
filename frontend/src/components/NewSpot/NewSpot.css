@@ -13,6 +13,7 @@
   }
   
   .new-spot-form {
+    font-family: 'Courier New', Courier, monospace;
     max-width: 500px;
   }
   
@@ -83,7 +84,7 @@
   
   .new-spot-submit-button {
     color: white;
-    background-color: #83aaff;
+    background-color: #FF5A5F;
     font-weight: bold;
     margin: 1rem 0 2rem 0;
     padding: 0.5rem 1.5rem;

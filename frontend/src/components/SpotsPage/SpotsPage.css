@@ -8,7 +8,7 @@
   .delete-spot-button .modal-button,
   .update-spot-button {
     color: white;
-    background-color: #83aaff;
+    background-color: #FF5A5F;
     font-weight: bold;
     text-decoration: none;
     border: none;
@@ -68,9 +68,13 @@
   }
   
   .spots-page-spot-card-line-1 {
+    color: #FF5A5F;
     justify-content: space-between;
   }
-  
+  .spots-page-spot-card-line-2{
+    color: #FF5A5F;
+    font-family: 'Courier New', Courier, monospace;
+  }
   .spots-page-spot-card-line-3 {
     margin-top: 1rem;
   }
@@ -80,6 +84,8 @@
   }
   
   .spots-page-spot-card-location {
+    color: #FF5A5F;
+    font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
   }
   

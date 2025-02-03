@@ -278,7 +278,7 @@ const NewSpot = () => {
           )}
         </div>
         <div className="new-spot-form-section">
-          <h2 className="new-spot-h2">Create a title for your spot</h2>
+          <h2 className="new-spot-h2">Create a name for your spot</h2>
           <p className="new-spot-p">
             What will you name your spot? Make it catchy! 
           </p>
@@ -294,7 +294,7 @@ const NewSpot = () => {
           {errors.name && <p className="new-spot-error">{errors.name}</p>}
         </div>
         <div className="new-spot-form-section">
-          <h2 className="new-spot-h2">Set a base price for your spot</h2>
+          <h2 className="new-spot-h2">Set your rate!</h2>
           <p className="new-spot-p">
             What will you charge per night? Please enter in USD.
           </p>

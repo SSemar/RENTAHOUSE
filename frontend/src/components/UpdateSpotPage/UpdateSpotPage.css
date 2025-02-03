@@ -4,7 +4,7 @@
   
   .update-spot-error,
   .update-spot-error-inline {
-    color: red;
+    color: #FF5A5F;
     text-align: left;
   }
   
@@ -22,6 +22,7 @@
   }
   
   .update-spot-input {
+    font-family: 'Courier New', Courier, monospace;
     width: 100%;
   }
   
@@ -65,10 +66,13 @@
   
   .update-spot-h1,
   .update-spot-h2 {
+    font-family: 'Courier New', Courier, monospace;
+    color: #FF5A5F;
     margin: 1rem 0 0 0;
   }
   
   .update-spot-p {
+    font-family: 'Courier New', Courier, monospace;
     margin: 0.5rem 0;
   }
   
@@ -78,8 +82,9 @@
   }
   
   .update-spot-submit-button {
+    font-family: 'Courier New', Courier, monospace;
     color: white;
-    background-color: #83aaff;
+    background-color: #FF5A5F;
     font-weight: bold;
     margin: 1rem 0 2rem 0;
     padding: 0.5rem 1.5rem;
