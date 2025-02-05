@@ -147,6 +147,8 @@ export const getReviews = spotId => async dispatch => {
   dispatch(updateReviews(reviews));
   return response;
 };
+
+
 //! POST API/SPOTS
 export const postSpot =
   ({ address, city, state, country, lat, lng, name, description, price }) =>
@@ -163,6 +165,7 @@ export const postSpot =
         name,
         description,
         price,
+        reviews,
       }),
     });
 

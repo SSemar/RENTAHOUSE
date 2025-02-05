@@ -3,6 +3,7 @@
 }
 
 .landing-page-spot-card-div {
+  
   margin-top: 1rem;
   border-radius: 0.75rem;
 }
@@ -37,7 +38,8 @@
 }
 
 .landing-page-spot-card-preview-image {
-  display: block;
+
+  display: flex;
   width: 250px;
   height: 250px;
   margin-bottom: 0.5rem;
@@ -48,6 +50,7 @@
 
 .landing-page-spots-main {
   display: flex;
+  
   flex-wrap: wrap;
   max-width: 65.5rem;
   gap: 1rem;
