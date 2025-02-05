@@ -434,7 +434,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     if (!spot) {
       throw new Error();
     }
-
+    //! check if the user is the owner of the spot
     const { user } = req;
     if (user) {
       const userId = user.id;
@@ -449,7 +449,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
             },
           ],
         });
-
+        
         const safeSpotBookings = [];
 
         spotBookings.forEach(booking => {
