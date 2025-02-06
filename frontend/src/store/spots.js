@@ -1,84 +1,4 @@
-// import { csrfFetch } from './csrf';
-
-// // Action Types
-// const UPDATE_SPOTS = 'spots/UPDATE_SPOTS';
-// const UPDATE_SPOT = 'spots/UPDATE_SPOT';
-// const RESET_STORE = 'spots/RESET_STORE';
-// const UPDATE_REVIEWS = 'spots/UPDATE_REVIEWS';
-
-// // Action Creators
-// const updateSpots = (spots) => ({
-//   type: UPDATE_SPOTS,
-//   payload: spots,
-// });
-
-// const updateSpot = (spot) => ({
-//   type: UPDATE_SPOT,
-//   payload: spot,
-// });
-
-// const resetStore = () => ({
-//   type: RESET_STORE,
-// });
-
-// const updateReviews = (reviews) => ({
-//   type: UPDATE_REVIEWS,
-//   payload: reviews,
-// });
-
-// // Thunks
-// export const clearStore = () => async (dispatch) => {
-//   dispatch(resetStore());
-// };
-
-// export const getSpots = () => async (dispatch) => {
-//   const response = await fetch('/api/spots', {
-//     method: 'GET',
-//   });
-//   const allSpots = await response.json();
-
-//   dispatch(updateSpots(allSpots));
-//   return response;
-// };
-
-// export const getSpot = (spotId) => async (dispatch) => {
-//   const response = await csrfFetch(`/api/spots/${spotId}`, {
-//     method: 'GET',
-//   });
-//   const spot = await response.json();
-
-//   dispatch(updateSpot(spot));
-//   return response;
-// };
-
-// // Initial State
-// const initialState = {
-//   allSpots: [],
-//   spot: null,
-//   reviews: [],
-// };
-
-// // Reducer
-// const spotsReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case RESET_STORE: {
-//       return initialState;
-//     }
-//     case UPDATE_SPOTS: {
-//       return { ...state, allSpots: action.payload.Spots };
-//     }
-//     case UPDATE_SPOT: {
-//       return { ...state, spot: action.payload };
-//     }
-//     case UPDATE_REVIEWS: {
-//       return { ...state, reviews: action.payload.Reviews };
-//     }
-//     default:
-//       return state;
-//   }
-// };
-
-// export default spotsReducer;
+// frontend/src/store/spots.js
 import { csrfFetch } from './csrf';
 
 const RESET_STORE = 'spots/resetStore';
@@ -113,11 +33,10 @@ const updateReviews = reviews => {
   };
 };
 
-//! RESET STORE
 export const clearStore = () => async dispatch => {
   dispatch(resetStore());
 };
-//! GET API/SPOTS
+
 export const getSpots = () => async dispatch => {
   const response = await fetch('/api/spots', {
     method: 'GET',
@@ -127,7 +46,7 @@ export const getSpots = () => async dispatch => {
   dispatch(updateSpots(allSpots));
   return response;
 };
-//! GET API/SPOTS/:ID
+
 export const getSpot = spotId => async dispatch => {
   const response = await csrfFetch(`/api/spots/${spotId}`, {
     method: 'GET',
@@ -137,7 +56,7 @@ export const getSpot = spotId => async dispatch => {
   dispatch(updateSpot(spot));
   return response;
 };
-//! GET API/SPOTS/:ID/REVIEWS
+
 export const getReviews = spotId => async dispatch => {
   const response = await fetch(`/api/spots/${spotId}/reviews`, {
     method: 'GET',
@@ -148,8 +67,6 @@ export const getReviews = spotId => async dispatch => {
   return response;
 };
 
-
-//! POST API/SPOTS
 export const postSpot =
   ({ address, city, state, country, lat, lng, name, description, price }) =>
   async dispatch => {
@@ -171,7 +88,7 @@ export const postSpot =
     dispatch(getSpots());
     return response;
   };
-//! POST API/SPOTS/:ID/IMAGES
+
 export const postSpotImages =
   ({ spotId, previewImage, image1, image2, image3, image4 }) =>
   async dispatch => {
@@ -201,7 +118,6 @@ export const postSpotImages =
     return response;
   };
 
-//! POST API/SPOTS/:ID/REVIEWS
 export const postReview =
   (spotId, { review, stars }) =>
   async dispatch => {
@@ -250,7 +166,7 @@ export const putSpot =
     dispatch(getSpots());
     return response;
   };
-//! DELETE API/SPOTS/:ID
+
 export const deleteSpot = spotId => async dispatch => {
   const response = await csrfFetch(`/api/spots/${spotId}`, {
     method: 'DELETE',
@@ -259,7 +175,7 @@ export const deleteSpot = spotId => async dispatch => {
   dispatch(getSpots());
   return response;
 };
-//! DELETE API/REVIEWS/:ID
+
 export const deleteReview = (reviewId, spotId) => async dispatch => {
   const response = await csrfFetch(`/api/reviews/${reviewId}`, {
     method: 'DELETE',
@@ -271,7 +187,7 @@ export const deleteReview = (reviewId, spotId) => async dispatch => {
 };
 
 const initialState = {};
-//! SPOTS REDUCER
+
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
     case RESET_STORE: {

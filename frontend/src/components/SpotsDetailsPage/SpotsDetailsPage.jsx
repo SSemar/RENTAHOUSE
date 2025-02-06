@@ -9,6 +9,7 @@ import OpenModalButton from '../OpenModalButton';
 import ReviewFormModal from '../ReviewFormModal';
 import * as spotsActions from '../../store/spots';
 import './SpotsDetailsPage.css';
+
 //! spotDetailsPage
 const SpotDetailsPage = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const SpotDetailsPage = () => {
   if (!allSpots || !currentSpot || !reviews) {
     return (
       <main className="spot-details-main">
-        <h1 className="spot-details-header">Loading page...</h1>
+        <h1 className="spot-details-header">Spots Detail Page Failed</h1>
       </main>
     );
   }
