@@ -9,7 +9,7 @@ import OpenModalButton from '../OpenModalButton';
 import ReviewFormModal from '../ReviewFormModal';
 import * as spotsActions from '../../store/spots';
 import './SpotsDetailsPage.css';
-
+//! spotDetailsPage
 const SpotDetailsPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

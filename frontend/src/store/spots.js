@@ -165,7 +165,6 @@ export const postSpot =
         name,
         description,
         price,
-        reviews,
       }),
     });
 
