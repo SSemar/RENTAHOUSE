@@ -1,3 +1,4 @@
+// backend/routes/api/reviews.js
 const express = require('express');
 
 const {
@@ -12,7 +13,7 @@ const { validateReview } = require('../../utils/validators.js');
 
 const router = express.Router();
 
-//! Get all Reviews of the Current User
+// Get all Reviews of the Current User
 router.get('/current', requireAuth, async (req, res) => {
   const { user } = req;
   if (user) {

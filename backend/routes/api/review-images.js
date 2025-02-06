@@ -2,7 +2,7 @@
 const express = require('express');
 
 const { requireAuth } = require('../../utils/auth.js');
-const { Review, ReviewImage } = require('../../db/models');
+const { Review, ReviewImage } = require('../../db/models/index.js');
 
 const router = express.Router();
 

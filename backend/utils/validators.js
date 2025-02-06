@@ -28,7 +28,7 @@ const validateSignup = [
   handleValidationErrors,
 ];
 
-// Check & validate user keys at login
+//! Check & validate user keys at login
 const validateLogin = [
   check('credential')
     .exists({ checkFalsy: true })
@@ -40,7 +40,7 @@ const validateLogin = [
   handleValidationErrors,
 ];
 
-// Check & validate user keys when creating & updating a Spot
+//! Check & validate user keys when creating & updating a Spot
 const validateSpot = [
   check('address')
     .exists({ checkFalsy: true })
@@ -78,7 +78,7 @@ const validateSpot = [
   handleValidationErrors,
 ];
 
-// Check & validate user keys when creating & updating a Review
+//! Check & validate user keys when creating & updating a Review
 const validateReview = [
   check('review')
     .exists({ checkFalsy: true })
@@ -93,7 +93,7 @@ const validateReview = [
   handleValidationErrors,
 ];
 
-// Check & validate user keys when creating & updating a Booking
+//! Check & validate user keys when creating & updating a Booking
 const validateBooking = [
   check('startDate')
     .exists({ checkFalsy: true })
@@ -108,23 +108,6 @@ const validateBooking = [
       throw new Error('startDate cannot be on or after endDate');
     }
   }),
-  // check('startDate').custom(async (startDate, { req }) => {
-  //   const conflictingBookings = await Booking.scope({
-  //     method: ['bySpotId', req.params.spotId],
-  //   }).findAll({
-  //     where: {
-  //       startDate: {
-  //         [Op.lte]: new Date(startDate),
-  //       },
-  //       endDate: {
-  //         [Op.gte]: new Date(startDate),
-  //       },
-  //     },
-  //   });
-  //   if (conflictingBookings.length) {
-  //     throw new Error('startDate conflicts with an existing booking');
-  //   }
-  // }),
   check('endDate')
     .exists({ checkFalsy: true })
     .withMessage('endDate is required'),
@@ -133,27 +116,10 @@ const validateBooking = [
       throw new Error('endDate cannot be on or after startDate');
     }
   }),
-  // check('endDate').custom(async (endDate, { req }) => {
-  //   const conflictingBookings = await Booking.scope({
-  //     method: ['bySpotId', req.params.spotId],
-  //   }).findAll({
-  //     where: {
-  //       startDate: {
-  //         [Op.lte]: new Date(endDate),
-  //       },
-  //       endDate: {
-  //         [Op.gte]: new Date(endDate),
-  //       },
-  //     },
-  //   });
-  //   if (conflictingBookings.length) {
-  //     throw new Error('endDate conflicts with an existing booking');
-  //   }
-  // }),
   handleValidationErrors,
 ];
 
-// Check & validate user queries when using query filters
+//! Check & validate user queries when using query filters
 const validateQuery = [
   query('page').custom(async (page, { req }) => {
     if (page) {

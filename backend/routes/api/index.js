@@ -1,38 +1,31 @@
+// backend/routes/api/index.js
 const router = require('express').Router();
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
-const spotRouter = require('./spots.js');
-const reviewRouter = require('./reviews.js');
-const bookingRouter = require('./bookings.js');
-//const imageRouter = require('./images.js'); 
+const spotsRouter = require('./spots.js');
+const reviewsRouter = require('./reviews.js');
+const bookingsRouter = require('./bookings.js');
+const spotImagesRouter = require('./spot-images.js');
+const reviewImagesRouter = require('./review-images.js');
 const { restoreUser } = require('../../utils/auth.js');
-const spotImageRouter = require('./spotImages.js'); // Import the spot images router
-const reviewImageRouter = require('./reviewImages.js'); // Import the review images router
 
-
-// Connect restoreUser middleware
+// Connect restoreUser middleware to the API router
+// If current user session is valid, set req.user to the user in the database
+// If current user session is not valid, set req.user to null
 router.use(restoreUser);
 
 router.use('/session', sessionRouter);
 
 router.use('/users', usersRouter);
 
-router.use('/spots', spotRouter);
+router.use('/spots', spotsRouter);
 
-router.use('/reviews', reviewRouter);
+router.use('/reviews', reviewsRouter);
 
-router.use('/bookings', bookingRouter);
-//router.use('/images', imageRouter); 
+router.use('/bookings', bookingsRouter);
 
-router.use('/spot-images', spotImageRouter); // Register the spot images routes under /spot-images
+router.use('/spot-images', spotImagesRouter);
 
-router.use('/review-images', reviewImageRouter); // Register the review images routes under /review-images
-
-
-
-
-// router.post('/test', (req, res) => {
-//   res.json({ requestBody: req.body });
-// });
+router.use('/review-images', reviewImagesRouter);
 
 module.exports = router;

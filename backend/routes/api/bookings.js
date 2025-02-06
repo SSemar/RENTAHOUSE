@@ -1,4 +1,4 @@
-// backend/routes/api/bookings.js
+
 const express = require('express');
 const { Op } = require('sequelize');
 

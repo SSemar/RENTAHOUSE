@@ -8,7 +8,7 @@ const { validateSignup } = require('../../utils/validators.js');
 
 const router = express.Router();
 
-//! Sign up
+// Sign up
 router.post('/', validateSignup, async (req, res) => {
   const { email, password, username, firstName, lastName } = req.body;
 
@@ -58,7 +58,7 @@ router.post('/', validateSignup, async (req, res) => {
     email: user.email,
     username: user.username,
   };
-  //! Set the token cookie asynchronously
+
   await setTokenCookie(res, safeUser);
 
   res.statusCode = 201;
