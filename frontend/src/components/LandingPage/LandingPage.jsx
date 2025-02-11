@@ -17,7 +17,7 @@ const LandingPage = () => {
   if (!spots)
     return (
       <main className="spot-details-main">
-        <h1 className="spot-details-header">No Spots Loaded...</h1>
+        <h1 className="spot-details-header">Loading page...</h1>
       </main>
     );
 
