@@ -31,13 +31,5 @@ const LandingPage = () => {
       </>
     );
   };
-//   return (
-//     <>
-//       <main className="landing-page-spots-main">
-//         {spots.map(spot => ( LandingSpot(spot) ))}
-//       </main>
-//     </>
-//   );
-// };
 
 export default LandingPage;

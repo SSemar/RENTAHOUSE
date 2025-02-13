@@ -30,7 +30,7 @@ const SpotDetailsPage = () => {
   if (allSpots && !allSpots.find(spot => spot.id === parseInt(spotId))) {
     return (
       <main className="spot-details-main">
-        <h1 className="spot-details-header">Spot Not Found</h1>
+        <h1 className="spot-details-header">Loading page...</h1>
         <button onClick={() => navigate('/')} className="return-home-button">
           Return to Home Page
         </button>
