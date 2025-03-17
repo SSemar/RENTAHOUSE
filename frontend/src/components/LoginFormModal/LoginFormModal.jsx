@@ -7,6 +7,9 @@ import { useModal } from '../../context/Modal';
 import * as sessionActions from '../../store/session';
 import './LoginForm.css';
 
+
+
+//! LoginFormModal component
 function LoginFormModal() {
   const dispatch = useDispatch();
   const [credential, setCredential] = useState("");
@@ -16,7 +19,7 @@ function LoginFormModal() {
   const isLoginButtonDisabled = credential.length < 4 || password.length < 6;
 
 
-
+  //! handleSubmit function
   const handleSubmit = e => {
     e.preventDefault();
     setErrors({});

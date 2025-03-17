@@ -25,6 +25,7 @@ const NewSpot = () => {
   const [errors, setErrors] = useState({});
   const isCreateSpotButtonDisabled = Object.keys(errors).length;
 
+  //!check if previewImage ends with .png, .jpg, or .jpeg
   const previewImageValidator = previewImage.length
     ? previewImage.endsWith('.png') ||
       previewImage.endsWith('.jpg') ||
@@ -51,6 +52,8 @@ const NewSpot = () => {
       image4.endsWith('.jpeg')
     : true;
 
+
+  //! useEffect to check if all fields are filled out
   useEffect(() => {
     const effectErrors = {};
     if (!country.length) effectErrors.country = 'Country is required';
