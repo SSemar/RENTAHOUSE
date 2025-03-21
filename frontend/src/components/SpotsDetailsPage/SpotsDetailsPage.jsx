@@ -182,7 +182,7 @@ const SpotDetailsPage = () => {
 export default SpotDetailsPage;
 
 
-
+//! Forget this Old Code
 // import React, { useEffect, useState } from 'react';
 // import './Spots.css';
 

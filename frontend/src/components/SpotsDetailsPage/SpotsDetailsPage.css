@@ -127,6 +127,7 @@ button:hover {
 .post-review-button-no-reviews .modal-button,
 .return-home-button {
   padding: 0.5rem 0.75rem;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .spot-details-preview-image {
@@ -183,6 +184,18 @@ button:hover {
 .spot-details-reviews-header {
   margin: 1rem 0;
 }
+button {
+  font-family: 'Courier New', Courier, monospace;
+  color: white;
+  background-color: #ff4a5f;
+  font-size: 1rem;
+  font-weight: bold;
+  height: max-content;
+  width: 30%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+}
 
 @media (min-width: 1181px) {
   .spot-details-container {
@@ -190,3 +203,4 @@ button:hover {
     justify-content: center;
   }
 }
+
