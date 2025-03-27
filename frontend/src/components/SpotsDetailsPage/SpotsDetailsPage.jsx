@@ -146,10 +146,11 @@ const SpotDetailsPage = () => {
             </span>
           </h2>
           {!!reviews.length && !!isNotOwner && !hasAlreadyReviewed && (
-            <div className="post-review-button">
+            <div className="post-review-button-container">
               <OpenModalButton
                 modalComponent={<ReviewFormModal spotId={spotId} />}
                 buttonText="Post Your Review"
+                className="post-review-button"
               />
             </div>
           )}

@@ -56,20 +56,20 @@ const NewSpot = () => {
   //! useEffect to check if all fields are filled out
   useEffect(() => {
     const effectErrors = {};
-    if (!country.length) effectErrors.country = 'Country is required';
-    if (!address.length) effectErrors.address = 'Address is required';
-    if (!city.length) effectErrors.city = 'City is required';
-    if (!state.length) effectErrors.state = 'State is required';
-    if (!lat.length) effectErrors.lat = 'Latitude is required';
-    if (!lng.length) effectErrors.lng = 'Longitude is required';
-    if (!description.length)
-      effectErrors.description = 'Description is required';
-    if (!name.length) effectErrors.name = 'Name is required';
-    if (!price.length) effectErrors.price = 'Price is required';
-    if (!previewImage.length)
-      effectErrors.previewImage = 'Preview image is required';
-
+    
+    if (!country.trim().length) effectErrors.country = 'Country is required and cannot start or end with a space';
+    if (!address.trim().length) effectErrors.address = 'Address is required and cannot start or end with a space';
+    if (!city.trim().length) effectErrors.city = 'City is required and cannot start or end with a space';
+    if (!state.trim().length) effectErrors.state = 'State is required and ccannot start or end with a space';
+    if (!lat.trim().length) effectErrors.lat = 'Latitude is required and cannot start or end with a space';
+    if (!lng.trim().length) effectErrors.lng = 'Longitude is required and cannot start or end with a space';
+    if (!description.trim().length) effectErrors.description = 'Description is required and cannot start or end with a space';
+    if (!name.trim().length) effectErrors.name = 'Name is required and cannot start or end with a space';
+    if (!price.trim().length) effectErrors.price = 'Price is required and cannot start or end with a space';
+    if (!previewImage.trim().length) effectErrors.previewImage = 'Preview image is required and cannot start or end with a space';
+  
     setErrors(effectErrors);
+    console.log(effectErrors);
   }, [
     country,
     address,
@@ -86,9 +86,54 @@ const NewSpot = () => {
   const handleSubmit = e => {
     e.preventDefault();
 
+    const validationErrors = {};
+  
+    if (!country.trim().length)
+      validationErrors.country = 'Country is required and cannot start or end with a space';
+    if (!address.trim().length)
+      validationErrors.address = 'Address is required and cannot start or end with a space';
+    if (!city.trim().length)
+      validationErrors.city = 'City is required and cannot start or end with a space';
+    if (!state.trim().length)
+      validationErrors.state = 'State is required and cannot start or end with a space';
+    if (!lat.trim().length)
+      validationErrors.lat = 'Latitude is required and cannot start or end with a space';
+    if (!lng.trim().length)
+      validationErrors.lng = 'Longitude is required and cannot start or end with a space';
+    if (!description.trim().length)
+      validationErrors.description = 'Description is required and cannot start or end with a space';
+    if (!name.trim().length)
+      validationErrors.name = 'Name is required and cannot start or end with a space';
+    if (!price.trim().length)
+      validationErrors.price = 'Price is required and cannot start or end with a space';
+    if (!previewImage.trim().length)
+      validationErrors.previewImage = 'Preview image is required and cannot start or end with a space';
+  
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // Stop form submission if there are errors
+    }
+    
+    const trimmedData = {
+      country: country.trim(),
+      address: address.trim(),
+      city: city.trim(),
+      state: state.trim(),
+      lat: lat.trim(),
+      lng: lng.trim(),
+      description: description.trim(),
+      name: name.trim(),
+      price: price.trim(),
+      previewImage: previewImage.trim(),
+      image1: image1.trim(),
+      image2: image2.trim(),
+      image3: image3.trim(),
+      image4: image4.trim(),
+    };
+  
     if (
-      description.length > 29 &&
-      previewImage.length &&
+      trimmedData.description.length > 29 &&
+      trimmedData.previewImage.length &&
       previewImageValidator &&
       image1Validator &&
       image2Validator &&
@@ -97,23 +142,22 @@ const NewSpot = () => {
     ) {
       setErrors({});
       let spotId;
-
+  
       dispatch(
         spotsActions.postSpot({
-          address,
-          city,
-          state,
-          country,
-          lat,
-          lng,
-          name,
-          description,
-          price,
+          address: trimmedData.address,
+          city: trimmedData.city,
+          state: trimmedData.state,
+          country: trimmedData.country,
+          lat: trimmedData.lat,
+          lng: trimmedData.lng,
+          name: trimmedData.name,
+          description: trimmedData.description,
+          price: trimmedData.price,
         })
       )
         .catch(async res => {
           const data = await res.json();
-          // Equivalent to `if (data && data.errors) {`
           if (data?.errors) {
             setErrors(data.errors);
           }
@@ -121,33 +165,32 @@ const NewSpot = () => {
         .then(async res => {
           const data = await res.json();
           spotId = data.id;
-
+  
           dispatch(
             spotsActions.postSpotImages({
               spotId,
-              previewImage,
-              image1,
-              image2,
-              image3,
-              image4,
+              previewImage: trimmedData.previewImage,
+              image1: trimmedData.image1,
+              image2: trimmedData.image2,
+              image3: trimmedData.image3,
+              image4: trimmedData.image4,
             })
           ).catch(async res => {
             const data = await res.json();
-            // Equivalent to `if (data && data.errors) {`
             if (data?.errors) {
               setErrors(data.errors);
             }
           });
-
+  
           navigate(`/spots/${spotId}`);
         });
     } else {
       const validationErrors = {};
-
-      if (description.length < 30)
+  
+      if (trimmedData.description.length < 30)
         validationErrors.description =
           'Description must be at least 30 characters';
-      if (!previewImage.length)
+      if (!trimmedData.previewImage.length)
         validationErrors.previewImage = 'Preview image is required';
       if (!previewImageValidator)
         validationErrors.previewImage =
@@ -160,11 +203,11 @@ const NewSpot = () => {
         validationErrors.image3 = 'Image URL must end in .png, .jpg, or .jpeg';
       if (!image4Validator)
         validationErrors.image4 = 'Image URL must end in .png, .jpg, or .jpeg';
-
+  
       return setErrors(validationErrors);
     }
   };
-
+  
   return (
     <main className="new-spot-main">
       <form onSubmit={handleSubmit} className="new-spot-form">

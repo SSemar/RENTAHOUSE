@@ -138,8 +138,8 @@ button:hover {
   padding: 0.5rem 0.75rem;
   font-family: 'Courier New', Courier, monospace;
 }
-.post-review-button{
-  color: white;
+/* .post-review-button{
+  color: rgb(255, 37, 37);
   background-color: #ff4a5f;
   font-size: 1rem;
   font-weight: bold;
@@ -148,7 +148,7 @@ button:hover {
   padding: 0.5rem;
   border: none;
   border-radius: 0.5rem;
-}
+} */
 
 .spot-details-preview-image {
   display: block;
@@ -217,6 +217,24 @@ button:hover {
   border-radius: 0.5rem;
 } */
 
+
+
+.post-review-button {
+  color: white;
+  background-color: #ff4a5f;
+  font-size: 1rem;
+  font-weight: bold;
+  height: max-content;
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+.post-review-button:hover {
+  background-color: #ff6a7f;
+  cursor: pointer;
+}
 @media (min-width: 1181px) {
   .spot-details-container {
     display: flex;
